@@ -1,0 +1,339 @@
+---
+// src/pages/offers.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import products from '../data/products.json';
+import { siteConfig } from '../config/site.js';
+
+// 🔥 1. AUTO-FILTER LOGIC (Only >= 20% Discount)
+const offerProducts = products.map(p => {
+  if (!p.regular_price || p.regular_price <= p.sale_price) return null;
+  
+  // Calculate discount percentage
+  const discount = Math.round(((p.regular_price - p.sale_price) / p.regular_price) * 100);
+  
+  // Only keep if discount is 20% or more
+  if (discount >= 20) {
+    return { ...p, discount };
+  }
+  return null;
+}).filter(Boolean); // Remove nulls
+
+// Sort by highest discount first
+offerProducts.sort((a, b) => b.discount - a.discount);
+
+// 🔥 2. SEO META & SCHEMAS
+const title = "Mega Vape Offers in Hyderabad - Up to 50% OFF | VAPEHYD";
+const description = "Grab the biggest deals on authentic disposable vapes and e-liquids in Hyderabad. Minimum 20% to 50% OFF. Fast 30-minute express delivery.";
+
+// Google Sale Event Schema (Tells Google about your active sale)
+const saleEventSchema = {
+  "@context": "https://schema.org",
+  "@type": "SaleEvent",
+  "name": "Mega Vape Flash Sale",
+  "description": "Exclusive 72-Hour Flash Sale on premium vapes with minimum 20% to 50% discount.",
+  "image": `${siteConfig.url}/assets/sale-banner.jpg`,
+  "startDate": new Date().toISOString(),
+  "endDate": new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString(),
+  "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "location": {
+    "@type": "VirtualLocation",
+    "url": `${siteConfig.url}/offers`
+  }
+};
+
+const faqs = [
+  { q: "Are the discounted vapes near their expiry date?", a: "Not at all! We never sell expired or near-expiry products. The discounts are part of our exclusive volume-based brand partnerships, allowing us to pass the savings directly to you." },
+  { q: "Do offer products qualify for 30-minute delivery?", a: "Yes. Every product bought from the Offers page is eligible for our standard 30-45 minute express delivery across Hyderabad." },
+  { q: "Can I use Cash on Delivery (COD) for sale items?", a: "Absolutely. You can opt for Cash on Delivery or UPI payments at your doorstep even for heavily discounted items." },
+  { q: "How often do these vape offers change?", a: "Our flash sale cycles reset every 72 hours. Inventory moves extremely fast, so if you see a flavor or device you like at 40% or 50% off, we highly recommend grabbing it immediately before stocks run out." },
+  { q: "Are the sale items 100% authentic?", a: "Yes, our zero-tolerance policy against clones applies to all sale items. Every discounted product comes with its original brand verification QR code." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.a }
+  }))
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Inject Schemas to Google -->
+  <script type="application/ld+json" set:html={JSON.stringify(saleEventSchema)}></script>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
+  <div class="offers-wrapper">
+    
+    <!-- 🔥 PREMIUM FLASH SALE BANNER & TIMER -->
+    <section class="flash-sale-banner">
+      <div class="banner-glow"></div>
+      <div class="banner-content">
+        <h1 class="flash-title">MEGA <span class="highlight">FLASH SALE</span></h1>
+        <p class="flash-subtitle">Minimum 20% OFF on premium authentic vapes. Hurry, stocks disappear fast!</p>
+        
+        <!-- Auto Resetting 72H Timer -->
+        <div class="timer-box">
+          <div class="timer-label">Offer Ends In</div>
+          <div class="timer-display">
+            <div class="time-block"><span id="t-hours">71</span><span class="t-lbl">HRS</span></div>
+            <span class="colon">:</span>
+            <div class="time-block"><span id="t-mins">59</span><span class="t-lbl">MIN</span></div>
+            <span class="colon">:</span>
+            <div class="time-block"><span id="t-secs">59</span><span class="t-lbl">SEC</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="offers-main-layout">
+      
+      <!-- 🔥 DISCOUNT FILTERS -->
+      <div class="filter-controls">
+        <div class="filter-label">Filter by Discount:</div>
+        <div class="filter-chips">
+          <button class="discount-filter active" data-min="20">All Offers</button>
+          <button class="discount-filter" data-min="30">30%+ OFF</button>
+          <button class="discount-filter" data-min="40">40%+ OFF</button>
+          <button class="discount-filter" data-min="50">50%+ OFF</button>
+        </div>
+      </div>
+
+      <!-- PRODUCTS GRID -->
+      {offerProducts.length > 0 ? (
+        <div id="offers-grid" class="grid-container">
+          {offerProducts.map((p) => (
+            <div class="offer-card-wrapper" data-discount={p.discount}>
+              <!-- Massive Highlight Badge for Offers -->
+              <div class="discount-mega-badge">{p.discount}% OFF</div>
+              <ProductCard product={p} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <div class="empty-icon">😢</div>
+          <h3>No offers running right now</h3>
+          <p>Check back soon for new flash deals!</p>
+        </div>
+      )}
+    </div>
+
+    <!-- 🔥 ADVANCED SEO CONTENT FOR GOOGLE (600+ words impact) -->
+    <section class="master-seo-section">
+      <div class="seo-layout">
+        <article class="seo-content-body">
+          <h2 class="seo-main-heading">Hyderabad's Biggest Vape Discount Hub</h2>
+          
+          <div class="seo-text-block">
+            <h3>Why Shop the VAPEHYD Flash Sale?</h3>
+            <p>If you have been hunting for premium <strong>vape discounts in Hyderabad</strong>, you have landed on the most exclusive page on the internet. Our 72-hour rotating flash sale is designed to give you unprecedented access to top-tier vaping hardware and e-liquids at wholesale prices. We guarantee a minimum of 20% off on all products listed on this page, with select items experiencing massive price drops of up to 50%.</p>
+          </div>
+
+          <div class="seo-text-block">
+            <h3>How Do We Offer Such Massive Discounts?</h3>
+            <p>Customers often wonder how we can slash prices so heavily while maintaining our strict 30-minute hyperlocal delivery guarantee. The secret lies in our direct relationships with master distributors and brands like Elfbar, IGET, and Uwell. When we secure bulk inventory at preferential rates, we do not hoard the profit margins. Instead, we initiate these dynamic 72-hour cycles to pass the financial benefits directly to the vaping community in Hyderabad. This means you get 100% authentic, fresh-batch devices without the premium retail markup.</p>
+          </div>
+
+          <div class="seo-text-block">
+            <h3>Smart Filters to Find Your Deal</h3>
+            <p>We respect your time and budget. That is why we have engineered a seamless filtering system directly into our offers page. Whether you are passively browsing for a 30% discount on nicotine salts, or aggressively hunting for a 50% clearance deal on high-puff disposable vapes, our one-click filter buttons instantly curate the catalog for you. Every item displayed dynamically updates to ensure you are only seeing products that meet your exact discount criteria.</p>
+          </div>
+
+          <!-- FAQs -->
+          <div class="seo-text-block faq-block mt-4">
+            <h3>Top FAQs about our Vape Offers</h3>
+            <div class="accordion-wrapper">
+              {faqs.map((faq) => (
+                <div class="faq-item">
+                  <button class="faq-question">
+                    {faq.q} 
+                    <span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                  </button>
+                  <div class="faq-answer"><p>{faq.a}</p></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </article>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  /* WRAPPER */
+  .offers-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 16px 60px; font-family: system-ui, -apple-system, sans-serif; }
+  @media (min-width: 768px) { .offers-wrapper { padding: 0 24px 80px; } }
+
+  /* 🔥 FLASH SALE BANNER */
+  .flash-sale-banner { 
+    position: relative; margin: 20px 0 40px; padding: 40px 20px; 
+    background: linear-gradient(135deg, #1a0510 0%, #0d0d0d 100%); 
+    border-radius: 24px; border: 1px solid rgba(255, 62, 108, 0.2); 
+    text-align: center; overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  @media (min-width: 768px) { .flash-sale-banner { padding: 50px 40px; } }
+  
+  .banner-glow {
+    position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 300px; background: radial-gradient(circle, rgba(255, 62, 108, 0.4) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(50px); z-index: 0; pointer-events: none;
+  }
+  
+  .banner-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+  
+  .flash-title { font-size: 2.2rem; color: #fff; margin: 0 0 10px; font-weight: 900; letter-spacing: 1px; }
+  @media (min-width: 768px) { .flash-title { font-size: 3.5rem; } }
+  .highlight { color: #ff3e6c; text-shadow: 0 0 20px rgba(255,62,108,0.5); }
+  
+  .flash-subtitle { color: #aaa; font-size: 1rem; margin-bottom: 30px; max-width: 500px; line-height: 1.5; }
+
+  /* DIGITAL TIMER UI */
+  .timer-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 15px 25px; border-radius: 16px; backdrop-filter: blur(10px); }
+  .timer-label { color: #ff3e6c; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+  .timer-display { display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .time-block { display: flex; flex-direction: column; align-items: center; }
+  .time-block span:first-child { font-size: 2.5rem; font-weight: 900; color: #fff; line-height: 1; font-variant-numeric: tabular-nums; }
+  .t-lbl { font-size: 0.7rem; color: #888; font-weight: 700; margin-top: 4px; }
+  .colon { font-size: 2rem; color: #ff3e6c; font-weight: 900; margin-bottom: 15px; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* FILTERS */
+  .filter-controls { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+  @media (min-width: 768px) { .filter-controls { flex-direction: row; align-items: center; } }
+  .filter-label { color: #fff; font-weight: 700; font-size: 1.1rem; }
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  
+  .discount-filter { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ccc; padding: 10px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .discount-filter:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .discount-filter.active { background: #ff3e6c; border-color: #ff3e6c; color: #fff; box-shadow: 0 4px 15px rgba(255, 62, 108, 0.4); }
+
+  /* GRID & OFFERS WRAPPER */
+  .offers-main-layout { margin-bottom: 60px; }
+  .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 768px) { .grid-container { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+  @media (min-width: 1200px) { .grid-container { grid-template-columns: repeat(4, 1fr); } }
+  
+  .offer-card-wrapper { position: relative; transition: opacity 0.3s, transform 0.3s; }
+  .offer-card-wrapper.hidden { display: none; }
+  
+  /* OVERLAY BADGE */
+  .discount-mega-badge { 
+    position: absolute; top: -10px; right: -10px; z-index: 20;
+    background: #ff0000; color: #fff; font-size: 0.85rem; font-weight: 900; 
+    padding: 8px 12px; border-radius: 20px; text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255,0,0,0.5); border: 2px solid #fff;
+    transform: rotate(5deg);
+  }
+
+  .empty-state { text-align: center; padding: 60px 20px; background: #141414; border-radius: 20px; }
+  .empty-icon { font-size: 3rem; margin-bottom: 10px; }
+  .empty-state h3 { color: #fff; margin: 0 0 10px; }
+  .empty-state p { color: #888; margin: 0; }
+
+  /* SEO MASTER SECTION (Reusing styles from category page) */
+  .master-seo-section { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; }
+  .seo-main-heading { font-size: 1.6rem; color: #fff; margin: 0 0 30px; font-weight: 800; }
+  .seo-text-block { margin-bottom: 30px; }
+  .seo-text-block h3 { color: #fff; font-size: 1.2rem; margin: 0 0 12px; font-weight: 700; }
+  .seo-text-block p { color: #aaa; font-size: 0.95rem; line-height: 1.8; margin: 0; }
+  .seo-text-block p :global(strong) { color: #eee; }
+  
+  .accordion-wrapper { display: flex; flex-direction: column; gap: 10px; }
+  .faq-item { background: #141414; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
+  .faq-question { width: 100%; background: none; border: none; padding: 16px 20px; color: #fff; font-size: 0.95rem; font-weight: 600; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-question .icon { transition: transform 0.3s; color: #ff3e6c; flex-shrink: 0; }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 20px; }
+  .faq-answer p { margin: 0 0 16px; font-size: 0.9rem; line-height: 1.6; color: #999; }
+  .faq-item.active .faq-answer { max-height: 300px; }
+  .faq-item.active .faq-question .icon { transform: rotate(180deg); }
+  .mt-4 { margin-top: 40px; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- 1. 72-HOUR REPEATING TIMER LOGIC ---
+    const TIMER_KEY = 'vapehyd_flash_sale_end';
+    const HOURS_72 = 72 * 60 * 60 * 1000;
+    
+    let endTime = localStorage.getItem(TIMER_KEY);
+    
+    // If no timer exists, or the timer has expired in the past, reset it for 72 hours from NOW
+    if (!endTime || Date.now() > parseInt(endTime)) {
+      endTime = (Date.now() + HOURS_72).toString();
+      localStorage.setItem(TIMER_KEY, endTime);
+    }
+
+    const tHours = document.getElementById('t-hours');
+    const tMins = document.getElementById('t-mins');
+    const tSecs = document.getElementById('t-secs');
+
+    function updateTimer() {
+      const now = Date.now();
+      const distance = parseInt(endTime!) - now;
+
+      if (distance <= 0) {
+        // Time is up, reset the 72 hours immediately (Looping sale)
+        endTime = (Date.now() + HOURS_72).toString();
+        localStorage.setItem(TIMER_KEY, endTime);
+        return updateTimer(); // Re-run
+      }
+
+      const h = Math.floor((distance % (1000 * 60 * 60 * 24 * 10)) / (1000 * 60 * 60)); // Total hours left (can be > 24)
+      const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+      if(tHours) tHours.innerText = h < 10 ? '0' + h : h.toString();
+      if(tMins) tMins.innerText = m < 10 ? '0' + m : m.toString();
+      if(tSecs) tSecs.innerText = s < 10 ? '0' + s : s.toString();
+    }
+    
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // --- 2. DISCOUNT FILTER LOGIC ---
+    const filterBtns = document.querySelectorAll('.discount-filter');
+    const offerItems = document.querySelectorAll('.offer-card-wrapper');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // UI Active State
+        filterBtns.forEach(b => b.classList.remove('active'));
+        const target = e.target as HTMLElement;
+        target.classList.add('active');
+
+        // Logic
+        const minDiscount = parseInt(target.dataset.min || '20');
+
+        offerItems.forEach(item => {
+          const el = item as HTMLElement;
+          const itemDiscount = parseInt(el.dataset.discount || '0');
+          
+          if (itemDiscount >= minDiscount) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // --- 3. FAQ ACCORDION LOGIC ---
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        if(item) item.classList.toggle('active');
+      });
+    });
+
+  });
+</script>

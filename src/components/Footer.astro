@@ -1,0 +1,217 @@
+---
+// src/components/Footer.astro
+import { siteConfig } from '../config/site.js';
+import products from '../data/products.json';
+
+// 1. Dynamic Categories Extraction (Sirf wahi jo JSON me exist karti hain)
+const uniqueCategories = [...new Set(products.map(item => item.category))].filter(Boolean);
+
+// 2. Unique Brands Extraction
+const uniqueBrands = [...new Set(products.map(item => item.brand))].filter(Boolean);
+
+const waMessage = encodeURIComponent(`Hi ${siteConfig.name}, I need some help with my order.`);
+const waLink = `https://wa.me/${siteConfig.whatsappNumber}?text=${waMessage}`;
+
+// 3. ADVANCED SEO: Organization & SiteNavigationElement Schema
+const footerSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "VAPEHYD",
+      "url": siteConfig.url,
+      "logo": `${siteConfig.url}/logo.png`,
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": `+91-${siteConfig.whatsappNumber}`,
+        "contactType": "customer service",
+        "areaServed": "Hyderabad, IN",
+        "availableLanguage": ["English", "Hindi", "Telugu"]
+      }
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "name": "Quick Links",
+      "url": [
+        `${siteConfig.url}/shop`,
+        `${siteConfig.url}/offers`,
+        `${siteConfig.url}/about`,
+        `${siteConfig.url}/contact`
+      ]
+    }
+  ]
+};
+---
+
+<!-- Inject Footer Schema -->
+<script type="application/ld+json" set:html={JSON.stringify(footerSchema)}></script>
+
+<!-- Sticky Floating WhatsApp Button (Hidden on Mobile) -->
+<a href={waLink} target="_blank" rel="noopener noreferrer" class="floating-wa-btn desktop-only" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+</a>
+
+<footer class="premium-footer">
+  <div class="footer-glow"></div>
+  <div class="footer-container">
+    
+    <div class="footer-grid">
+      <!-- 1. Brand & Identity -->
+      <div class="footer-col brand-col">
+        <a href="/" class="footer-logo">
+          VAPE<span class="logo-accent">HYD</span>
+        </a>
+        <p class="brand-desc">
+          Hyderabad's premier hyper-local dispatch center for 100% authentic disposable vapes, pods, and e-liquids. Skip the wait and experience our exclusive 30-minute express delivery.
+        </p>
+        <div class="contact-info">
+          <p><strong><span class="icon">💬</span> WhatsApp:</strong> +{siteConfig.whatsappNumber}</p>
+          <p><strong><span class="icon">✉️</span> Email:</strong> support@vapehyderabad.in</p>
+        </div>
+      </div>
+
+      <!-- 2. Shop & Categories -->
+      <div class="footer-col">
+        <h3>Shop Online</h3>
+        <ul class="footer-links">
+          <li><a href="/shop" class="highlight-link">All Vapes Collection →</a></li>
+          <li><a href="/offers" class="highlight-link text-green">Mega Flash Sale %</a></li>
+          {uniqueCategories.map((category) => {
+            const catSlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+            return <li><a href={`/category/${catSlug}`}>{category} in Hyderabad</a></li>;
+          })}
+        </ul>
+      </div>
+
+      <!-- 3. Top Brands (SEO Interlinking) -->
+      <div class="footer-col">
+        <h3>Top Brands</h3>
+        <ul class="footer-links">
+          {uniqueBrands.slice(0, 6).map((brand) => (
+            <li><a href={`/shop?brand=${encodeURIComponent(brand.toLowerCase())}`}>{brand} Vapes</a></li>
+          ))}
+          <li><a href="/shop">View All Brands</a></li>
+        </ul>
+      </div>
+
+      <!-- 4. Legal & Support -->
+      <div class="footer-col">
+        <h3>Support & Legal</h3>
+        <ul class="footer-links two-columns-mobile">
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/contact">Contact Support</a></li>
+          <li><a href="/policies/shipping-policy">Shipping Policy</a></li>
+          <li><a href="/policies/refund-policy">Return & Refund</a></li>
+          <li><a href="/policies/privacy-policy">Privacy Policy</a></li>
+          <li><a href="/policies/terms-and-conditions">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Section: 18+ Warning & Copyright -->
+    <div class="footer-bottom">
+      <div class="age-warning-card">
+        <span class="warning-icon">18+</span>
+        <div class="warning-text">
+          <strong>AGE VERIFICATION REQUIRED</strong>
+          <p>Our products contain nicotine. Nicotine is an addictive chemical. You must be 18 years or older to browse or purchase from this website. VAPEHYD strictly prohibits sales to minors.</p>
+        </div>
+      </div>
+      
+      <div class="copyright-row">
+        <p>&copy; {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.</p>
+        <p class="seo-text">Delivering to Banjara Hills, Jubilee Hills, Hitech City, and 50+ locations across Hyderabad.</p>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  /* --- Sticky Floating WhatsApp Button --- */
+  .floating-wa-btn {
+    position: fixed; bottom: 30px; right: 30px; background: #25D366; color: #fff;
+    width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5); z-index: 999;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+    animation: bounceIn 0.8s ease-out forwards;
+  }
+  .floating-wa-btn:hover { transform: scale(1.1); background: #1ebd5a; }
+  
+  @keyframes bounceIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  /* 🔥 HIDE ON MOBILE (Since bottom nav already has it) */
+  @media (max-width: 991px) {
+    .desktop-only { display: none !important; }
+  }
+
+  /* --- Premium Dark Footer UI --- */
+  .premium-footer {
+    position: relative; background: #050505; border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 80px 16px 100px; /* Extra padding bottom for mobile nav bar */
+    font-family: system-ui, -apple-system, sans-serif; color: #888; overflow: hidden;
+  }
+  @media (min-width: 768px) { .premium-footer { padding-bottom: 40px; } }
+  
+  .footer-glow {
+    position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px; background: radial-gradient(ellipse, rgba(255, 62, 108, 0.08) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(50px); z-index: 0; pointer-events: none;
+  }
+  
+  .footer-container { position: relative; max-width: 1200px; margin: 0 auto; z-index: 2; }
+
+  .footer-grid { display: grid; grid-template-columns: 1fr; gap: 50px; margin-bottom: 60px; }
+  @media (min-width: 576px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 992px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; } }
+
+  /* Brand Column */
+  .brand-col { display: flex; flex-direction: column; align-items: flex-start; padding-right: 20px; }
+  .footer-logo { font-size: 1.8rem; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -0.5px; margin-bottom: 16px; }
+  .logo-accent { color: #ff3e6c; }
+  .brand-desc { line-height: 1.7; margin: 0 0 24px 0; font-size: 0.95rem; color: #aaa; }
+  
+  .contact-info { font-size: 0.95rem; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); width: 100%; }
+  .contact-info p { margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; }
+  .contact-info p:last-child { margin: 0; }
+  .contact-info strong { color: #ddd; }
+
+  /* Link Columns */
+  .footer-col h3 { color: #fff; font-size: 1.1rem; font-weight: 800; margin: 0 0 20px 0; letter-spacing: 0.5px; }
+  .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+  .footer-links a { color: #888; text-decoration: none; font-size: 0.95rem; transition: all 0.2s; display: inline-block; }
+  .footer-links a:hover { color: #ff3e6c; transform: translateX(4px); }
+  
+  .highlight-link { color: #fff !important; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2px; }
+  .highlight-link:hover { border-color: #ff3e6c; }
+  .text-green { color: #25D366 !important; border-color: rgba(37,211,102,0.3); }
+  .text-green:hover { border-color: #25D366; color: #25D366 !important; }
+
+  /* Two columns on mobile for long lists */
+  @media (max-width: 575px) {
+    .two-columns-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  }
+
+  /* Bottom Section */
+  .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 30px; text-align: center; }
+
+  .age-warning-card {
+    display: flex; align-items: flex-start; gap: 16px; background: rgba(0, 0, 0, 0.5); 
+    border: 1px solid rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 16px; max-width: 800px; text-align: left;
+  }
+  .warning-icon {
+    background: transparent; color: #fff; border: 2px solid #fff; border-radius: 50%;
+    width: 44px; height: 44px; display: flex; justify-content: center; align-items: center;
+    font-weight: 900; font-size: 1rem; flex-shrink: 0;
+  }
+  .warning-text strong { display: block; color: #fff; font-size: 0.95rem; margin-bottom: 6px; letter-spacing: 1px; }
+  .warning-text p { margin: 0; font-size: 0.85rem; line-height: 1.5; color: #aaa; }
+
+  .copyright-row { display: flex; flex-direction: column; gap: 8px; }
+  .copyright-row p { margin: 0; font-size: 0.9rem; color: #666; }
+  .seo-text { font-size: 0.8rem !important; color: #444 !important; }
+</style>

@@ -1,0 +1,318 @@
+---
+// src/components/ProductGrid.astro
+import products from '../data/products.json';
+import { siteConfig } from '../config/site.js';
+
+const waNumber = siteConfig.whatsappNumber;
+
+// 🔥 Sirf top 12 products homepage par dikhayenge (Optimal for layout and speed)
+const displayProducts = products.slice(0, 12);
+---
+
+<section id="products" class="premium-product-section">
+  <div class="section-header">
+    <h2 class="section-title">Exclusive Collection</h2>
+    <a href="/shop" class="view-all">Explore All <span class="arrow">→</span></a>
+  </div>
+
+  <div class="grid-container">
+    {displayProducts.map((product) => {
+      const waMsg = encodeURIComponent(`Hi ${siteConfig.name}, I want to buy:\n\n*${product.name}*\nPrice: ₹${product.sale_price}\n\nIs this available for 30-min delivery?`);
+      const waLink = `https://wa.me/${waNumber}?text=${waMsg}`;
+      
+      const hasVariants = product.variants && product.variants.length > 0;
+      const productSlug = product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+      return (
+        <article class="premium-card reveal-on-scroll">
+          
+          <a href={`/product/${productSlug}`} class="img-box">
+            {product.tags && product.tags[0] && (
+              <span class="premium-badge">{product.tags[0]}</span>
+            )}
+            {product.image.includes('http') || product.image.includes('/') ? (
+              <img src={product.image} alt={product.name} class="real-product-img" loading="lazy" />
+            ) : (
+              <div class="emoji-placeholder">{product.image}</div>
+            )}
+          </a>
+
+          <div class="card-content">
+            <a href={`/product/${productSlug}`} class="product-link">
+              <h3 class="product-title" title={product.name}>{product.name}</h3>
+            </a>
+            
+            <div class="price-container">
+              <span class="sale-price">₹{product.sale_price}</span>
+              {product.regular_price && (
+                 <span class="regular-price">₹{product.regular_price}</span>
+              )}
+            </div>
+
+            <div class="trust-row">
+              <span class="trust-item"><span class="icon">⚡</span> 30-Min</span>
+              <span class="trust-item"><span class="icon">🛡️</span> Authentic</span>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            {hasVariants ? (
+              <a href={`/product/${productSlug}`} class="action-btn ctr-btn select-flavor-btn">
+                 Select Flavor <span class="arrow">→</span>
+              </a>
+            ) : (
+              <button 
+                class="action-btn ctr-btn cart-add-btn global-add-btn" 
+                data-id={product.id} 
+                data-name={product.name} 
+                data-price={product.sale_price} 
+                data-image={product.image}
+              >
+                <span class="btn-text">ADD</span>
+                <span class="plus-icon">+</span>
+              </button>
+            )}
+            
+            <a href={waLink} target="_blank" rel="noopener noreferrer" class="action-btn wa-icon-btn" aria-label="Buy on WhatsApp">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            </a>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+  
+  <div class="view-more-container">
+    <a href="/shop" class="primary-btn view-more-btn">View All Products</a>
+  </div>
+</section>
+
+<style>
+  .premium-product-section { max-width: 1200px; margin: 20px auto 40px; padding: 0 12px; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
+  
+  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
+  .section-title { font-size: 1.25rem; color: #fff; margin: 0; font-weight: 800; letter-spacing: -0.5px; }
+  .view-all { color: #ff3e6c; text-decoration: none; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; transition: gap 0.2s; }
+  .view-all:hover { gap: 8px; }
+
+  .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 30px;}
+  
+  @media (min-width: 768px) { 
+    .grid-container { grid-template-columns: repeat(3, 1fr); gap: 20px; } 
+    .premium-product-section { padding: 0 24px; margin: 40px auto 80px; }
+    .section-title { font-size: 1.6rem; }
+  }
+  @media (min-width: 1024px) { .grid-container { grid-template-columns: repeat(4, 1fr); } }
+
+  .premium-card {
+    background: linear-gradient(180deg, rgba(22,22,22,0.8) 0%, rgba(15,15,15,0.9) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 16px;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+  }
+  @media (min-width: 768px) {
+    .premium-card:hover { transform: translateY(-6px); border-color: rgba(255, 62, 108, 0.3); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+  }
+
+  .img-box {
+    width: 100%; aspect-ratio: 1 !important; position: relative;
+    display: flex; justify-content: center; align-items: center;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); overflow: hidden;
+    text-decoration: none;
+  }
+
+  .img-box::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+    transform: skewX(-20deg); animation: shimmer 3s infinite; z-index: 1;
+  }
+  @keyframes shimmer { 100% { left: 200%; } }
+
+  .real-product-img { 
+    width: 100%; height: 100%; object-fit: contain; padding: 8px; 
+    filter: drop-shadow(0 8px 10px rgba(0,0,0,0.5)); transition: transform 0.4s ease; z-index: 2;
+  }
+  .premium-card:hover .real-product-img { transform: scale(1.08); }
+
+  .emoji-placeholder { font-size: 2.5rem; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.5)); z-index: 2; }
+  
+  .premium-badge {
+    position: absolute; top: 6px; left: 6px; z-index: 3;
+    background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px);
+    color: #fff; font-size: 0.55rem; font-weight: 700; padding: 3px 6px;
+    border-radius: 8px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .card-content { padding: 8px 8px 4px; flex-grow: 1; display: flex; flex-direction: column; }
+  .product-link { text-decoration: none; color: inherit; }
+  .product-link:hover .product-title { color: #ff3e6c; }
+  .product-title { color: #fff; font-size: 0.8rem; font-weight: 700; margin: 0 0 2px 0; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.2s ease;}
+  
+  .price-container { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+  .sale-price { color: #fff; font-weight: 800; font-size: 0.95rem; }
+  .regular-price { color: #555; text-decoration: line-through; font-size: 0.7rem; font-weight: 600; }
+
+  .trust-row { display: flex; gap: 4px; margin-bottom: 8px; margin-top: auto; flex-wrap: wrap; }
+  .trust-item { 
+    display: flex; align-items: center; gap: 2px; font-size: 0.55rem; font-weight: 600; color: #aaa;
+    background: rgba(255,255,255,0.03); padding: 2px 4px; border-radius: 4px;
+  }
+  .trust-item .icon { font-size: 0.6rem; }
+
+  .card-actions { display: grid; grid-template-columns: 1fr 40px; gap: 8px; padding: 0 8px 10px; }
+  .action-btn { display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: 800; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; height: 38px; touch-action: manipulation; }
+  
+  .ctr-btn { color: #ff3e6c; border: 1px solid rgba(255, 62, 108, 0.4); font-size: 0.8rem; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(255, 62, 108, 0.1); }
+  .cart-add-btn { background: linear-gradient(135deg, rgba(255, 62, 108, 0.15) 0%, rgba(255, 62, 108, 0.05) 100%); }
+  
+  .select-flavor-btn { background: linear-gradient(135deg, rgba(138, 43, 226, 0.15) 0%, rgba(138, 43, 226, 0.05) 100%); color: #b162ff; border: 1px solid rgba(138, 43, 226, 0.4); box-shadow: 0 4px 10px rgba(138, 43, 226, 0.1); }
+  .select-flavor-btn:hover, .select-flavor-btn:active { background: linear-gradient(135deg, #a020f0 0%, #7a16b8 100%); color: white; border-color: transparent; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4); }
+  .arrow { margin-left: 4px; transition: transform 0.2s; font-size: 0.9rem;}
+  .select-flavor-btn:hover .arrow { transform: translateX(4px); }
+  
+  .ctr-btn:hover, .ctr-btn:active { background: linear-gradient(135deg, #ff3e6c 0%, #e62c58 100%); color: white; border-color: transparent; box-shadow: 0 4px 15px rgba(255, 62, 108, 0.4); transform: translateY(-2px); }
+  .plus-icon { font-size: 1.1rem; margin-left: 4px; transition: transform 0.3s; }
+  .ctr-btn:hover .plus-icon { transform: rotate(90deg); }
+
+  .wa-icon-btn { background: #25D366; color: #fff; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); }
+  .wa-icon-btn:hover, .wa-icon-btn:active { transform: scale(0.92); background: #1ebd5a; }
+  
+  .reveal-on-scroll {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+
+  .view-more-container { text-align: center; margin-top: 10px; }
+  .primary-btn { display: inline-block; background: transparent; color: #fff; padding: 12px 30px; border-radius: 12px; font-weight: 800; border: 1px solid rgba(255,255,255,0.2); text-decoration: none; transition: transform 0.2s, background 0.2s; }
+  .primary-btn:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+
+  :global(.flying-product) {
+    position: fixed; z-index: 9999; width: 40px; height: 40px; object-fit: contain; pointer-events: none;
+    transform: translate(-50%, -50%) scale(1);
+    transition: left 0.65s ease-in, top 0.65s cubic-bezier(0.5, -0.5, 1, 1), transform 0.65s ease-in, opacity 0.6s ease-in;
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Scroll Reveal Animation Logic
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target); 
+        }
+      });
+    }, { root: null, rootMargin: "0px", threshold: 0.1 });
+
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+    revealElements.forEach((el) => observer.observe(el));
+
+    // 2. Premium Pop Sound Effect
+    function playPremiumPop() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.2);
+      } catch (e) { }
+    }
+
+    // 3. Flying Product to Cart Animation
+    function flyToCart(buttonElement, imageSource) {
+      const cartIcon = document.querySelector('.cart-icon-wrapper');
+      const article = buttonElement.closest('.premium-card');
+      let imgElem = article.querySelector('.real-product-img');
+      
+      if(!imgElem) imgElem = article.querySelector('.emoji-placeholder');
+      if (!cartIcon || !imgElem) return;
+
+      const imgRect = imgElem.getBoundingClientRect();
+      const cartRect = cartIcon.getBoundingClientRect();
+
+      let flyer;
+      if(imageSource.includes('http') || imageSource.includes('/')) {
+          flyer = document.createElement('img');
+          flyer.src = imageSource;
+      } else {
+          flyer = document.createElement('div');
+          flyer.innerText = imageSource;
+          flyer.style.fontSize = '2.5rem';
+      }
+      
+      flyer.className = 'flying-product';
+      flyer.style.left = `${imgRect.left + imgRect.width / 2}px`;
+      flyer.style.top = `${imgRect.top + imgRect.height / 2}px`;
+      document.body.appendChild(flyer);
+      
+      flyer.getBoundingClientRect(); // Trigger animation reflow
+
+      flyer.style.left = `${cartRect.left + cartRect.width / 2}px`;
+      flyer.style.top = `${cartRect.top + cartRect.height / 2}px`;
+      flyer.style.transform = 'translate(-50%, -50%) scale(0.1)';
+      flyer.style.opacity = '0';
+
+      setTimeout(() => {
+        flyer.remove();
+        cartIcon.style.transform = 'scale(1.3)';
+        cartIcon.style.transition = 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        setTimeout(() => { cartIcon.style.transform = 'scale(1)'; }, 200);
+      }, 650);
+    }
+
+    // 4. ADD TO CART Button Logic
+    document.querySelectorAll('.cart-add-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault(); // Kisi aur link par mat le jao
+        e.stopPropagation();
+
+        const button = e.currentTarget;
+        const pId = button.dataset.id;
+        const pName = button.dataset.name;
+        const pPrice = parseInt(button.dataset.price);
+        const pImg = button.dataset.image;
+
+        // Cart Update karna
+        let cart = JSON.parse(localStorage.getItem('vapeCart')) || [];
+        const exist = cart.find(i => i.id === pId);
+        if(exist) {
+            exist.quantity += 1;
+        } else {
+            cart.push({ id: pId, name: pName, price: pPrice, image: pImg, quantity: 1 });
+        }
+        
+        localStorage.setItem('vapeCart', JSON.stringify(cart));
+        window.dispatchEvent(new Event('cartUpdated')); 
+
+        // Sound aur Udne wala animation chalana
+        playPremiumPop();
+        flyToCart(button, pImg);
+
+        // Success State dikhana
+        const originalHtml = button.innerHTML;
+        button.innerHTML = `<span class="btn-text">ADDED</span> <span class="plus-icon">✔</span>`;
+        button.style.background = "linear-gradient(135deg, #25D366 0%, #1ebd5a 100%)";
+        button.style.color = "#fff";
+        button.style.borderColor = "transparent";
+        
+        setTimeout(() => {
+          button.innerHTML = originalHtml;
+          button.style.background = "";
+          button.style.color = "";
+          button.style.borderColor = "";
+        }, 1000);
+      });
+    });
+  });
+</script>

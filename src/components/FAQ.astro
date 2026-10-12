@@ -1,0 +1,201 @@
+---
+// src/components/FAQ.astro
+
+// SEO & AI: JSON-LD Schema for FAQPage
+// Yeh Google aur AI bots ko batayega ki yeh exactly FAQs hain.
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What makes VAPEHYD the best vape shop in Hyderabad?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "VAPEHYD stands out as the premier vape store in Hyderabad by offering 100% authentic products, 30-minute lightning-fast express delivery, and the most competitive pricing. Whether you are looking for disposable vapes, premium e-liquids, or advanced pod systems, we guarantee a secure, discreet, and premium shopping experience right at your doorstep."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How fast is your vape delivery in Hyderabad and Secunderabad?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We understand that when you need a vape, you need it fast. Our dedicated fleet of delivery partners ensures that your order reaches you within 30 to 45 minutes across all major pin codes in Hyderabad and Secunderabad. All packages are sealed and delivered discreetly to protect your privacy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are your disposable vapes and e-liquids 100% authentic?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Absolutely. We have a strict zero-tolerance policy for clones. Every single disposable vape (like IGET, Elfbar) and pod system (Uwell, Vaporesso) is sourced directly from official manufacturers or authorized master distributors. You can scan the anti-counterfeit QR code on the packaging of our products to verify their authenticity online."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which is better for a beginner: Disposable Vapes or Pod Systems?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you are completely new, Disposable Vapes (like IGET Bar or Elfbar RAYA) are the easiest choice because they require zero maintenance, no charging initially, and no refilling. However, if you are looking for a long-term, cost-effective solution, Pod Systems (like Uwell Caliburn) are better. You only need to change the coil and refill the e-liquid, giving you more freedom to choose different flavors and nicotine strengths."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I choose the right nicotine strength for my e-liquid?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choosing the right strength depends on your previous habits. If you are transitioning from heavy smoking, a 50mg (5%) SaltNic will provide the strong throat hit and satisfaction you need. If you are a light smoker or prefer smoother hits with more flavor focus, 20mg to 25mg (2% - 2.5%) SaltNic or Freebase liquids (3mg/6mg) for sub-ohm devices would be the ideal choice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What payment methods do you accept for your orders?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We offer a seamless and secure checkout process directly via WhatsApp. You can pay instantly using UPI (Google Pay, PhonePe, Paytm), Net Banking, or Credit/Debit cards via our secure payment links. Once the payment screenshot is shared and verified, your order is immediately dispatched."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I order vapes in bulk at wholesale prices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! VAPEHYD caters to both retail and B2B customers. If you are looking to purchase disposable vapes, pods, or e-liquids in bulk quantities, we offer special wholesale discounts. Simply reach out to us on our official WhatsApp support number with your bulk requirements, and our team will provide you with a customized quote."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you offer any warranty or return policy on your vape devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Due to the consumable nature of vaping products, we generally do not accept returns. However, customer satisfaction is our priority. If you receive a Dead-On-Arrival (DOA) device, please provide an unboxing video within 24 hours of delivery. For hardware like Pod Systems, the standard manufacturer warranty applies, and we assist our customers in claiming it."
+      }
+    }
+  ]
+};
+
+const faqs = faqSchema.mainEntity;
+---
+
+<section class="faq-section">
+  <!-- Injects the Schema for Google/AI -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="faq-header">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-subtitle">Everything you need to know about our premium products and services.</p>
+  </div>
+
+  <div class="faq-container">
+    {faqs.map((faq, index) => (
+      <details class="faq-item" name="faq-accordion">
+        <summary class="faq-question">
+          <h3>{faq.name}</h3>
+          <span class="icon-cross"></span>
+        </summary>
+        <div class="faq-answer">
+          <p>{faq.acceptedAnswer.text}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* --- Ultra Premium FAQ UI --- */
+  .faq-section {
+    max-width: 900px; /* Thoda narrow rakha hai padhne me aasani ke liye */
+    margin: 60px auto; 
+    padding: 0 16px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  .faq-header { text-align: center; margin-bottom: 40px; }
+  .section-title { font-size: 2rem; color: #fff; margin: 0 0 10px 0; font-weight: 800; letter-spacing: -0.5px; }
+  .section-subtitle { font-size: 1rem; color: #888; margin: 0; }
+
+  .faq-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* HTML5 Details/Summary Styling */
+  .faq-item {
+    background: rgba(22, 22, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .faq-item:hover {
+    background: rgba(30, 30, 30, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Removes default arrow in Safari/Chrome */
+  .faq-question::-webkit-details-marker { display: none; }
+  
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    cursor: pointer;
+    user-select: none;
+    list-style: none; /* Removes default arrow in Firefox */
+  }
+  
+  .faq-question h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #e0e0e0;
+    line-height: 1.4;
+    padding-right: 20px;
+    transition: color 0.3s ease;
+  }
+
+  /* Custom Animated Plus/Cross Icon */
+  .icon-cross {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .icon-cross::before, .icon-cross::after {
+    content: ''; position: absolute; background: #ff3e6c;
+    border-radius: 2px; transition: transform 0.3s ease;
+  }
+  /* Horizontal line */
+  .icon-cross::before { top: 9px; left: 0; width: 20px; height: 2px; }
+  /* Vertical line */
+  .icon-cross::after { top: 0; left: 9px; width: 2px; height: 20px; }
+
+  /* When details is open */
+  .faq-item[open] {
+    border-color: rgba(255, 62, 108, 0.3);
+    background: rgba(255, 62, 108, 0.05);
+  }
+  .faq-item[open] .faq-question h3 { color: #fff; }
+  
+  /* Rotate the cross into a minus sign */
+  .faq-item[open] .icon-cross::after { transform: rotate(90deg); }
+  .faq-item[open] .icon-cross::before { transform: rotate(180deg); }
+
+  /* Smooth Answer Reveal */
+  .faq-answer {
+    padding: 0 20px 20px 20px;
+    color: #aaa;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    animation: slideDown 0.3s ease-out forwards;
+  }
+  .faq-answer p { margin: 0; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

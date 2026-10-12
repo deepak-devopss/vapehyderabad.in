@@ -1,0 +1,417 @@
+---
+// src/pages/shop.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { siteConfig } from '../config/site.js';
+import products from '../data/products.json';
+
+// Dynamic Filter Extraction
+const uniqueBrands = [...new Set(products.map(p => p.brand))].filter(Boolean);
+const maxProductPrice = Math.max(...products.map(p => p.sale_price || 0));
+
+// High-converting SEO Meta
+const title = "Buy Premium Vapes in Hyderabad | Online Vape Store";
+const description = "Shop 100% authentic disposable vapes, e-liquids, and pods at VAPEHYD. Get 30-minute fast delivery across Hyderabad.";
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="shop-wrapper">
+    
+    <!-- Premium SEO Header Banner -->
+    <section class="shop-header-banner">
+      <div class="banner-content">
+        <h1 class="page-title">Premium <span class="highlight">Vape Store Hyderabad</span></h1>
+        <p class="page-subtitle">Discover our curated collection of 100% authentic disposable vapes and e-liquids. Fast delivery across Hyderabad.</p>
+      </div>
+    </section>
+
+    <div class="shop-layout">
+      <!-- 1. FILTER SIDEBAR (Sticky Desktop / Drawer Mobile) -->
+      <aside id="filter-drawer" class="filter-sidebar">
+        <div class="filter-header-mobile">
+          <h3>Filters & Sort</h3>
+          <button id="close-filter-btn" class="close-btn">✖</button>
+        </div>
+
+        <div class="filter-scroll-area">
+          <!-- Sort Options -->
+          <div class="filter-group">
+            <h4 class="filter-title">Sort By</h4>
+            <div class="custom-select">
+              <select id="sort-select">
+                <option value="popular">🔥 Trending / Popular</option>
+                <option value="price-low">💸 Price: Low to High</option>
+                <option value="price-high">💎 Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Brand Checkboxes -->
+          <div class="filter-group">
+            <h4 class="filter-title">Brands</h4>
+            <div class="checkbox-list">
+              {uniqueBrands.map(brand => (
+                <label class="custom-checkbox">
+                  <input type="checkbox" class="brand-filter" value={brand} />
+                  <span class="checkmark"></span>
+                  <span class="label-text">{brand}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Price Slider -->
+          <div class="filter-group">
+            <h4 class="filter-title">Max Price: ₹<span id="price-val">{maxProductPrice}</span></h4>
+            <input type="range" id="price-slider" min="0" max={maxProductPrice} value={maxProductPrice} class="premium-slider" />
+          </div>
+        </div>
+
+        <div class="filter-footer-mobile">
+          <button id="apply-filter-btn" class="apply-btn">Apply Filters</button>
+        </div>
+      </aside>
+
+      <!-- Mobile Overlay -->
+      <div id="filter-overlay" class="overlay hidden"></div>
+
+      <!-- 2. MAIN PRODUCT AREA -->
+      <main class="shop-main">
+        
+        <!-- Controls & Chips -->
+        <div class="shop-controls">
+          <button id="mobile-filter-btn" class="mobile-filter-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+            Sort & Filters
+          </button>
+          
+          <div id="active-chips" class="active-chips-container hidden"></div>
+        </div>
+
+        <!-- Premium Shimmer Loader -->
+        <div id="shop-shimmer" class="grid-container hidden">
+          {[1,2,3,4,5,6].map(() => (
+            <div class="shimmer-card">
+              <div class="shimmer-img shimmer-anim"></div>
+              <div class="shimmer-line shimmer-anim" style="width: 80%; height: 16px; margin: 12px; border-radius: 4px;"></div>
+              <div class="shimmer-line shimmer-anim" style="width: 50%; height: 14px; margin: 0 12px 12px; border-radius: 4px;"></div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Dynamic Product Grid using Reusable Component -->
+        <div id="product-grid" class="grid-container">
+          {products.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+
+        <!-- Empty State -->
+        <div id="no-results" class="empty-state hidden">
+          <div class="empty-icon">🏜️</div>
+          <h3>No vapes found</h3>
+          <p>Try adjusting your filters or price range.</p>
+          <button id="clear-all-btn" class="clear-btn">Clear All Filters</button>
+        </div>
+      </main>
+    </div>
+
+    <!-- 3. SEO ACCORDION FAQ SECTION -->
+    <section class="seo-faq-section">
+      <div class="faq-container">
+        <h2 class="faq-heading">Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+          <button class="faq-question">Why is VAPEHYD the best vape shop in Hyderabad? <span class="toggle-icon">+</span></button>
+          <div class="faq-answer">
+            <p>VAPEHYD is recognized as the top <strong>vape store in Hyderabad</strong> because we guarantee 100% authentic products. We source directly from official manufacturers, ensuring you receive only the safest and highest quality disposable vapes and e-liquids available online.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">How fast is your online vape delivery in Hyderabad? <span class="toggle-icon">+</span></button>
+          <div class="faq-answer">
+            <p>We pride ourselves on speed! We offer ultra-fast 30 to 45-minute express delivery for all <strong>vapes in Hyderabad</strong>. Just place your order via our secure checkout or WhatsApp, and our dispatch team will ensure it reaches your doorstep instantly.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">Do you sell authentic disposable vapes? <span class="toggle-icon">+</span></button>
+          <div class="faq-answer">
+            <p>Absolutely. Buying an <strong>online vape in Hyderabad</strong> can be tricky, but VAPEHYD completely eliminates the risk of clones. Every disposable vape, pod system, and e-liquid we sell is verifiable and genuine.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  /* --- GLOBAL LAYOUT --- */
+  .shop-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 0 60px; font-family: system-ui, -apple-system, sans-serif; }
+
+  /* Banner */
+  .shop-header-banner {
+    padding: 30px 16px; background: linear-gradient(180deg, rgba(255, 62, 108, 0.1) 0%, rgba(0,0,0,0) 100%);
+    text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;
+  }
+  .page-title { font-size: 1.8rem; color: #fff; margin: 0 0 10px; font-weight: 800; letter-spacing: -0.5px; }
+  .highlight { color: #ff3e6c; }
+  .page-subtitle { font-size: 0.9rem; color: #aaa; margin: 0 auto; max-width: 600px; line-height: 1.5; }
+  @media (min-width: 768px) { .shop-header-banner { padding: 40px 24px; text-align: left; } .page-title { font-size: 2.5rem; } .page-subtitle { margin: 0; font-size: 1rem; } }
+
+  .shop-layout { display: flex; flex-direction: column; gap: 20px; padding: 0 12px; }
+  @media (min-width: 992px) { .shop-layout { flex-direction: row; align-items: flex-start; padding: 0 24px; gap: 30px; } }
+
+  /* --- FILTER SIDEBAR --- */
+  .filter-sidebar { background: #111; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; width: 100%; position: relative; }
+  @media (max-width: 991px) {
+    .filter-sidebar {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 85vh; z-index: 1000;
+      border-radius: 24px 24px 0 0; padding: 0; display: flex; flex-direction: column;
+      transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .filter-sidebar.open { transform: translateY(0); }
+  }
+  @media (min-width: 992px) {
+    .filter-sidebar { width: 280px; flex-shrink: 0; position: sticky; top: 100px; }
+    .filter-header-mobile, .filter-footer-mobile { display: none !important; }
+  }
+
+  .filter-header-mobile { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); background: #1a1a1a; border-radius: 24px 24px 0 0; }
+  .filter-header-mobile h3 { margin: 0; color: #fff; font-size: 1.1rem; }
+  .close-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+  .filter-scroll-area { padding: 20px; overflow-y: auto; flex-grow: 1; }
+  /* Bottom Nav overlap fix */
+.filter-footer-mobile { 
+  padding: 16px 20px; 
+  /* Nav bar aur iPhone safe area ke liye 80px extra space add kiya hai */
+  padding-bottom: calc(16px + 80px + env(safe-area-inset-bottom)); 
+  background: #1a1a1a; 
+  border-top: 1px solid rgba(255,255,255,0.1); 
+}
+  .apply-btn { width: 100%; padding: 14px; border-radius: 12px; background: #ff3e6c; color: #fff; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; }
+
+  .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(4px); opacity: 1; transition: opacity 0.3s; }
+  .overlay.hidden { opacity: 0; pointer-events: none; }
+
+  .filter-group { margin-bottom: 10px; }
+  .filter-title { margin: 0 0 12px; color: #fff; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 20px 0; }
+
+  .custom-select select { width: 100%; padding: 12px; background: #1a1a1a; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; outline: none; font-size: 0.9rem; cursor: pointer; }
+  
+  .checkbox-list { display: flex; flex-direction: column; gap: 10px; }
+  .custom-checkbox { display: flex; align-items: center; gap: 10px; cursor: pointer; position: relative; user-select: none; }
+  .custom-checkbox input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+  .checkmark { width: 20px; height: 20px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
+  .custom-checkbox input:checked ~ .checkmark { background: #ff3e6c; border-color: #ff3e6c; }
+  .custom-checkbox input:checked ~ .checkmark:after { content: '✔'; color: white; font-size: 12px; font-weight: bold; }
+  .label-text { color: #ccc; font-size: 0.9rem; }
+  .custom-checkbox:hover .label-text { color: #fff; }
+  .premium-slider { width: 100%; accent-color: #ff3e6c; cursor: pointer; }
+
+  /* --- MAIN CONTENT & CONTROLS --- */
+  .shop-main { flex: 1; min-width: 0; }
+  .shop-controls { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .mobile-filter-btn { display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; padding: 12px; background: #1a1a1a; color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+  @media (min-width: 992px) { .mobile-filter-btn { display: none; } }
+
+  .active-chips-container { display: flex; flex-wrap: wrap; gap: 8px; }
+  .active-chips-container.hidden { display: none; }
+  .filter-chip { background: rgba(255, 62, 108, 0.15); color: #ff3e6c; border: 1px solid rgba(255, 62, 108, 0.3); padding: 4px 10px; border-radius: 16px; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .chip-remove { cursor: pointer; font-weight: bold; }
+
+  /* Grid Area */
+  .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 768px) { .grid-container { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+  @media (min-width: 1200px) { .grid-container { grid-template-columns: repeat(4, 1fr); } }
+  .grid-container.hidden { display: none; }
+
+  /* Shimmer / Empty State */
+  .shimmer-card { background: #141414; border-radius: 16px; height: 260px; overflow: hidden; border: 1px solid rgba(255,255,255,0.04); }
+  .shimmer-img { width: 100%; aspect-ratio: 1; background: #1a1a1a; }
+  .shimmer-anim { background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%); background-size: 400% 100%; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .empty-state { text-align: center; padding: 60px 20px; background: #141414; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+  .empty-state.hidden { display: none; }
+  .empty-icon { font-size: 3rem; margin-bottom: 10px; filter: grayscale(100%); opacity: 0.5;}
+  .empty-state h3 { color: #fff; margin: 0 0 10px; font-size: 1.2rem;}
+  .empty-state p { color: #888; margin: 0 0 20px; font-size: 0.9rem;}
+  .clear-btn { background: #fff; color: #000; padding: 10px 20px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
+
+  /* --- SEO ACCORDION --- */
+  .seo-faq-section { margin-top: 60px; padding: 0 12px; }
+  @media (min-width: 768px) { .seo-faq-section { padding: 0 24px; } }
+  .faq-container { background: #111; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 24px; }
+  .faq-heading { color: #fff; font-size: 1.4rem; margin: 0 0 20px; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+  .faq-item { border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-question { width: 100%; background: none; border: none; color: #ddd; text-align: left; padding: 16px 0; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .faq-answer p { margin: 0 0 16px; color: #888; font-size: 0.9rem; line-height: 1.6; }
+  .faq-item.active .faq-answer { max-height: 300px; }
+  .faq-item.active .toggle-icon { transform: rotate(45deg); color: #ff3e6c; }
+  .toggle-icon { transition: transform 0.3s ease; font-size: 1.4rem; font-weight: 300;}
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    // Drawer Logic (Mobile)
+    const filterBtn = document.getElementById('mobile-filter-btn');
+    const closeBtn = document.getElementById('close-filter-btn');
+    const applyBtn = document.getElementById('apply-filter-btn');
+    const drawer = document.getElementById('filter-drawer');
+    const overlay = document.getElementById('filter-overlay');
+
+    function toggleDrawer() {
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('hidden');
+      document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+    }
+
+    filterBtn?.addEventListener('click', toggleDrawer);
+    closeBtn?.addEventListener('click', toggleDrawer);
+    overlay?.addEventListener('click', toggleDrawer);
+    applyBtn?.addEventListener('click', toggleDrawer);
+
+    // Filtering & Sorting Logic
+    const productsArray = Array.from(document.querySelectorAll('.product-item'));
+    const grid = document.getElementById('product-grid');
+    const shimmer = document.getElementById('shop-shimmer');
+    const noResults = document.getElementById('no-results');
+    const activeChipsContainer = document.getElementById('active-chips');
+    
+    const brandCheckboxes = document.querySelectorAll('.brand-filter');
+    const priceSlider = document.getElementById('price-slider');
+    const priceValText = document.getElementById('price-val');
+    const sortSelect = document.getElementById('sort-select');
+    const clearAllBtn = document.getElementById('clear-all-btn');
+
+    function updateProducts() {
+      // Show Shimmer Loader
+      grid.classList.add('hidden');
+      noResults.classList.add('hidden');
+      shimmer.classList.remove('hidden');
+
+      setTimeout(() => {
+        const selectedBrands = Array.from(brandCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+        const maxPrice = parseInt(priceSlider.value);
+        const sortBy = sortSelect.value;
+        let visibleCount = 0;
+
+        // Apply Filters
+        productsArray.forEach(card => {
+          const brand = card.dataset.brand;
+          const price = parseInt(card.dataset.price);
+
+          const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(brand);
+          const priceMatch = price <= maxPrice;
+
+          if (brandMatch && priceMatch) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Apply Sorting
+        const visibleProducts = productsArray.filter(card => card.style.display !== 'none');
+        
+        if (sortBy === 'price-low') {
+          visibleProducts.sort((a, b) => parseInt(a.dataset.price) - parseInt(b.dataset.price));
+        } else if (sortBy === 'price-high') {
+          visibleProducts.sort((a, b) => parseInt(b.dataset.price) - parseInt(a.dataset.price));
+        } else {
+          // 'popular' default - restore original order (or randomize slightly)
+          visibleProducts.sort(() => Math.random() - 0.5); 
+        }
+
+        // Re-append sorted elements back to DOM
+        visibleProducts.forEach(card => grid.appendChild(card));
+
+        updateChips(selectedBrands, maxPrice);
+        
+        shimmer.classList.add('hidden');
+        if (visibleCount > 0) {
+          grid.classList.remove('hidden');
+        } else {
+          noResults.classList.remove('hidden');
+        }
+      }, 350); // Fake load time
+    }
+
+    function updateChips(brands, maxPrice) {
+      activeChipsContainer.innerHTML = '';
+      if (brands.length === 0 && maxPrice == priceSlider.max) {
+        activeChipsContainer.classList.add('hidden');
+        return;
+      }
+      
+      activeChipsContainer.classList.remove('hidden');
+      
+      brands.forEach(brand => {
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        chip.innerHTML = `${brand} <span class="chip-remove" data-type="brand" data-val="${brand}">✖</span>`;
+        activeChipsContainer.appendChild(chip);
+      });
+
+      if (maxPrice < priceSlider.max) {
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip';
+        chip.innerHTML = `Up to ₹${maxPrice} <span class="chip-remove" data-type="price">✖</span>`;
+        activeChipsContainer.appendChild(chip);
+      }
+
+      document.querySelectorAll('.chip-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const type = e.target.dataset.type;
+          if (type === 'brand') {
+            const cb = Array.from(brandCheckboxes).find(c => c.value === e.target.dataset.val);
+            if(cb) cb.checked = false;
+          }
+          if (type === 'price') {
+            priceSlider.value = priceSlider.max;
+            priceValText.innerText = priceSlider.max;
+          }
+          updateProducts();
+        });
+      });
+    }
+
+    // Bind Filter Events
+    brandCheckboxes.forEach(cb => cb.addEventListener('change', updateProducts));
+    sortSelect.addEventListener('change', updateProducts);
+    
+    priceSlider.addEventListener('input', (e) => {
+      priceValText.innerText = e.target.value;
+    });
+    priceSlider.addEventListener('change', updateProducts);
+
+    clearAllBtn?.addEventListener('click', () => {
+      brandCheckboxes.forEach(cb => cb.checked = false);
+      priceSlider.value = priceSlider.max;
+      priceValText.innerText = priceSlider.max;
+      sortSelect.value = 'popular';
+      updateProducts();
+    });
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        item.classList.toggle('active');
+      });
+    });
+
+  });
+</script>

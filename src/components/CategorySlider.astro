@@ -1,0 +1,188 @@
+---
+// src/components/CategorySlider.astro
+import products from '../data/products.json';
+
+// 1. Dynamic Categories Extraction (Duplicates aur nulls hata kar)
+const uniqueCategories = [...new Set(products.map(item => item.category))].filter(Boolean);
+
+// 2. Static Tags / Filters
+const tags = ["🔥 Trending", "⭐ Bestsellers", "✨ New Arrivals", "💯 Top Rated"];
+
+// 3. Premium SVG Icon Mapper
+// Category name ke according best SVG icon assign karta hai
+const getCategoryIcon = (category: string) => {
+  const cat = category.toLowerCase();
+  
+  if (cat.includes('disposable')) {
+    // Sleek Disposable Vape Icon
+    return `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="4" width="10" height="16" rx="2"></rect><path d="M10 2h4v2h-4z"></path><line x1="12" y1="14" x2="12" y2="14.01"></line><path d="M9 10h6"></path></svg>`;
+  } 
+  else if (cat.includes('pod')) {
+    // Pod System / Battery Icon
+    return `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7z"></path><path d="M9 3h6v4H9z"></path><circle cx="12" cy="14" r="2"></circle></svg>`;
+  } 
+  else if (cat.includes('liquid') || cat.includes('juice') || cat.includes('salt')) {
+    // E-liquid Bottle Icon
+    return `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4v4h-4z"></path><path d="M7 7h10v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7z"></path><path d="M7 13h10"></path></svg>`;
+  }
+  else if (cat.includes('kit') || cat.includes('mod')) {
+    // Vape Kit / Mod Icon
+    return `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="14" rx="2"></rect><path d="M8 4h8v4H8z"></path><line x1="12" y1="13" x2="12" y2="17"></line><line x1="10" y1="15" x2="14" y2="15"></line></svg>`;
+  }
+  else if (cat.includes('coil') || cat.includes('accessory')) {
+    // Coil / Gear Icon
+    return `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M8 5h8"></path><path d="M6 10h12"></path><path d="M8 15h8"></path><path d="M10 20h4"></path></svg>`;
+  }
+  
+  // Universal Premium Star/Sparkle Icon for undefined categories
+  return `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+};
+---
+
+<section class="explore-section">
+  
+  <!-- Top Tags (Horizontal Scrollable Pills) -->
+  <div class="tags-wrapper">
+    <div class="tags-scroll">
+      {tags.map((tag, index) => (
+        <button class={`tag-pill ${index === 0 ? 'active' : ''}`}>{tag}</button>
+      ))}
+    </div>
+  </div>
+
+  <!-- Dynamic Categories (Horizontal Scrollable Items) -->
+  <div class="category-header">
+    <h2 class="section-title">Shop by Category</h2>
+  </div>
+  
+  <div class="categories-wrapper">
+    <div class="categories-scroll">
+      
+      {uniqueCategories.map((category) => (
+        <a href={`/shop?category=${encodeURIComponent(category)}`} class="category-card">
+          <div class="category-icon-box">
+            <div class="icon-glow"></div>
+            <div class="svg-container" set:html={getCategoryIcon(category)}></div>
+          </div>
+          <span class="category-name">{category}</span>
+        </a>
+      ))}
+      
+      <!-- 'View All' Static Card at the end -->
+      <a href="/shop" class="category-card">
+        <div class="category-icon-box view-all-box">
+          <div class="svg-container">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+          </div>
+        </div>
+        <span class="category-name">View All</span>
+      </a>
+
+    </div>
+  </div>
+
+</section>
+
+<style>
+  /* --- Premium App-Like Category Section --- */
+  .explore-section {
+    max-width: 1200px; margin: 30px auto 10px; font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  /* Tags (Pill Menu) Styling */
+  .tags-wrapper { margin-bottom: 35px; padding: 0 16px; position: relative; }
+  .tags-wrapper::after {
+    content: ''; position: absolute; top: 0; right: 0; height: 100%; width: 30px;
+    background: linear-gradient(to left, #050505 0%, transparent 100%); pointer-events: none;
+  }
+  
+  .tags-scroll {
+    display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .tags-scroll::-webkit-scrollbar { display: none; }
+  
+  .tag-pill {
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); color: #bbb;
+    padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; white-space: nowrap;
+    cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .tag-pill:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .tag-pill.active { background: linear-gradient(135deg, rgba(255, 62, 108, 0.15) 0%, rgba(255, 62, 108, 0.05) 100%); border-color: rgba(255, 62, 108, 0.4); color: #ff3e6c; box-shadow: 0 4px 15px rgba(255, 62, 108, 0.2); }
+  .tag-pill:active { transform: scale(0.95); }
+
+  /* Categories Styling */
+  .category-header { padding: 0 16px; margin-bottom: 16px; }
+  .section-title { font-size: 1.3rem; color: #fff; margin: 0; font-weight: 800; letter-spacing: -0.5px; }
+
+  .categories-wrapper { padding: 0 16px; position: relative; }
+  .categories-wrapper::after {
+    content: ''; position: absolute; top: 0; right: 0; height: 100%; width: 40px;
+    background: linear-gradient(to left, #050505 0%, transparent 100%); pointer-events: none;
+  }
+  
+  .categories-scroll {
+    display: flex; gap: 16px; overflow-x: auto; padding-bottom: 20px; padding-top: 10px; scrollbar-width: none;
+  }
+  .categories-scroll::-webkit-scrollbar { display: none; }
+
+  .category-card { display: flex; flex-direction: column; align-items: center; text-decoration: none; min-width: 80px; gap: 12px; }
+  
+  .category-icon-box {
+    position: relative; width: 75px; height: 75px; 
+    background: linear-gradient(145deg, rgba(25, 25, 25, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 22px; /* Smooth Squircle */
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 0 10px rgba(255,255,255,0.02);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .icon-glow {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 40px; height: 40px; background: #ff3e6c; filter: blur(25px); opacity: 0.15;
+    transition: opacity 0.3s;
+  }
+
+  .svg-container { color: #fff; transition: transform 0.3s, color 0.3s; display: flex; align-items: center; justify-content: center; z-index: 2;}
+  
+  /* Hover & Active States */
+  .category-card:hover .category-icon-box { transform: translateY(-5px); border-color: rgba(255, 62, 108, 0.3); box-shadow: 0 12px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255, 62, 108, 0.2); }
+  .category-card:hover .svg-container { color: #ff3e6c; transform: scale(1.1); }
+  .category-card:hover .icon-glow { opacity: 0.3; }
+  .category-card:active .category-icon-box { transform: scale(0.92); }
+  
+  /* View All Box Special Style */
+  .view-all-box { background: linear-gradient(145deg, rgba(255,62,108,0.15) 0%, rgba(10,10,10,0.95) 100%); border-color: rgba(255, 62, 108, 0.3); }
+  .view-all-box .svg-container { color: #ff3e6c; }
+
+  .category-name {
+    color: #ccc; font-size: 0.8rem; font-weight: 600; text-align: center;
+    width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    transition: color 0.2s;
+  }
+  .category-card:hover .category-name { color: #fff; }
+
+  /* Desktop Adjustments */
+  @media (min-width: 768px) {
+    .tags-wrapper, .categories-wrapper, .category-header { padding: 0 40px; }
+    .category-icon-box { width: 95px; height: 95px; border-radius: 28px; }
+    .svg-container svg { width: 40px; height: 40px; }
+    .category-name { font-size: 0.95rem; }
+    .tag-pill { font-size: 0.95rem; padding: 12px 24px; }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Logic for tag pills active state
+    const tags = document.querySelectorAll('.tag-pill');
+    tags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        tags.forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        
+        // Haptic Feedback for mobile
+        if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(20);
+      });
+    });
+  });
+</script>

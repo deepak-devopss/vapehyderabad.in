@@ -1,16 +1,63 @@
 ---
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import HeroBanner from '../components/HeroBanner.astro';
+import CategorySlider from '../components/CategorySlider.astro';
+import ProductGrid from '../components/ProductGrid.astro';
+import BrandShowcase from '../components/BrandShowcase.astro';
+import WhyChooseUs from '../components/WhyChooseUs.astro';
+import RichTextWithImage from '../components/RichTextWithImage.astro';
+import LocalAreas from '../components/LocalAreas.astro';
+import FAQ from '../components/FAQ.astro';
+
+
+// JSON-LD Schema for Local Business (Aapki SEO rank boost karne ke liye)
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Vape Hyderabad",
+  "image": "https://vapehyderabad.in/logo.png", // Apna actual logo link baad mein update karein
+  "url": "https://vapehyderabad.in",
+  "telephone": "+919718075675", // Apna actual number
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Hyderabad City",
+    "addressLocality": "Hyderabad",
+    "addressRegion": "TS",
+    "postalCode": "500001",
+    "addressCountry": "IN"
+  },
+  "priceRange": "₹₹"
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Home" description="Premium Vapes Delivered Fast in Hyderabad. Buy top brands today!">
+  
+  <!-- SEO Schema Injection -->
+  <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+
+  <!-- Hero Section -->
+  <HeroBanner />
+
+  <CategorySlider />
+
+  <ProductGrid />
+
+  <!-- Elfbar Showcase (Slider Style) -->
+  <BrandShowcase 
+    brandName="Elfbar" 
+    title="Elfbar Exclusives ✨" 
+    subtitle="The most loved disposable pods" 
+  />
+
+  <WhyChooseUs />
+
+  <RichTextWithImage />
+
+  <LocalAreas />
+
+  <FAQ />
+  
+
+</BaseLayout>

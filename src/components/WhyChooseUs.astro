@@ -1,0 +1,121 @@
+---
+// src/components/WhyChooseUs.astro
+---
+
+<!-- SEO & AI Optimized Section with Microdata -->
+<section class="why-us-section" aria-labelledby="why-choose-title" itemscope itemtype="https://schema.org/ItemList">
+  
+  <div class="section-header">
+    <h2 id="why-choose-title" itemprop="name" class="section-title">Why Vape Hyderabad?</h2>
+    <p class="section-subtitle">The most trusted premium vape store in the city.</p>
+  </div>
+
+  <div class="features-grid">
+    
+    <!-- Feature 1: Authenticity -->
+    <article class="feature-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <meta itemprop="position" content="1" />
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ff3e6c" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <div class="feature-content">
+        <h3 itemprop="name">100% Authentic Brands</h3>
+        <p itemprop="description">We source directly from official manufacturers like IGET, Elfbar, and Uwell. Scan the QR codes on our products to verify.</p>
+      </div>
+    </article>
+
+    <!-- Feature 2: Speed -->
+    <article class="feature-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <meta itemprop="position" content="2" />
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#25D366" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      </div>
+      <div class="feature-content">
+        <h3 itemprop="name">30-Min Express Delivery</h3>
+        <p itemprop="description">Craving a puff? Our dedicated delivery partners ensure your premium vapes reach your doorstep across Hyderabad in under 30 minutes.</p>
+      </div>
+    </article>
+
+    <!-- Feature 3: Pricing -->
+    <article class="feature-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <meta itemprop="position" content="3" />
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#3b82f6" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+      </div>
+      <div class="feature-content">
+        <h3 itemprop="name">Best Price Guarantee</h3>
+        <p itemprop="description">Premium vaping shouldn't break the bank. We offer wholesale rates directly to retail customers, saving you money on every order.</p>
+      </div>
+    </article>
+
+    <!-- Feature 4: Privacy -->
+    <article class="feature-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <meta itemprop="position" content="4" />
+      <div class="icon-box">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#a855f7" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
+      </div>
+      <div class="feature-content">
+        <h3 itemprop="name">Discreet & Secure</h3>
+        <p itemprop="description">Your privacy is our priority. All orders are packed in unmarked, secure packaging. No labels, no questions asked.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<style>
+  /* --- Premium App-Style Glass UI --- */
+  .why-us-section {
+    max-width: 1200px; margin: 60px auto; padding: 0 16px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  .section-header { text-align: center; margin-bottom: 40px; }
+  .section-title { font-size: 2rem; color: #fff; margin: 0 0 8px 0; font-weight: 800; letter-spacing: -0.5px; }
+  .section-subtitle { font-size: 1rem; color: #888; margin: 0; }
+
+  /* Grid for Features */
+  .features-grid {
+    display: grid; grid-template-columns: 1fr; gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  }
+  @media (min-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* Glassmorphism Feature Card */
+  .feature-card {
+    background: linear-gradient(145deg, rgba(22, 22, 22, 0.7) 0%, rgba(15, 15, 15, 0.9) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px; padding: 24px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 20px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .feature-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  }
+
+  /* Glowing Icon Box */
+  .icon-box {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px; border-radius: 16px;
+    display: flex; justify-content: center; align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+    transition: transform 0.3s ease;
+  }
+  .feature-card:hover .icon-box { transform: scale(1.1) rotate(5deg); }
+
+  /* Typography */
+  .feature-content h3 {
+    color: #fff; font-size: 1.15rem; font-weight: 700; margin: 0 0 10px 0; line-height: 1.3;
+  }
+  .feature-content p {
+    color: #999; font-size: 0.9rem; margin: 0; line-height: 1.6; font-weight: 400;
+  }
+</style>

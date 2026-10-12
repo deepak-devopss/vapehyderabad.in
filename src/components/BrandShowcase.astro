@@ -1,0 +1,50 @@
+---
+// src/components/BrandShowcase.astro
+import products from '../data/products.json';
+import ProductCard from './ProductCard.astro'; // 🔥 Component Import Kiya
+
+const { brandName, title, subtitle } = Astro.props;
+
+// Filter top 12 products of that brand
+const brandProducts = products
+  .filter((product) => product.brand.toLowerCase() === brandName.toLowerCase())
+  .slice(0, 12);
+---
+
+{brandProducts.length > 0 && (
+  <section class="premium-product-section brand-specific">
+    <div class="section-header">
+      <div class="header-titles">
+        <h2 class="section-title">{title}</h2>
+        {subtitle && <p class="brand-subtitle">{subtitle}</p>}
+      </div>
+      <a href={`/shop?brand=${brandName.toLowerCase()}`} class="view-all">View All <span class="arrow">→</span></a>
+    </div>
+
+    <div class="grid-container">
+      {brandProducts.map((product) => (
+        <ProductCard product={product} /> 
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .premium-product-section { max-width: 1200px; margin: 20px auto 40px; padding: 0 12px; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
+  
+  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
+  .header-titles { display: flex; flex-direction: column; gap: 4px; }
+  .section-title { font-size: 1.25rem; color: #fff; margin: 0; font-weight: 800; letter-spacing: -0.5px; }
+  .brand-subtitle { font-size: 0.85rem; color: #888; margin: 0; }
+  .view-all { color: #ff3e6c; text-decoration: none; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; transition: gap 0.2s; }
+  .view-all:hover { gap: 8px; }
+
+  .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px;}
+  
+  @media (min-width: 768px) { 
+    .grid-container { grid-template-columns: repeat(3, 1fr); gap: 20px; } 
+    .premium-product-section { padding: 0 24px; margin: 40px auto 80px; }
+    .section-title { font-size: 1.6rem; }
+  }
+  @media (min-width: 1024px) { .grid-container { grid-template-columns: repeat(4, 1fr); } }
+</style>

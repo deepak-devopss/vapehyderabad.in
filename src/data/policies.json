@@ -1,0 +1,78 @@
+[
+  {
+    "slug": "shipping-policy",
+    "title": "Shipping & Delivery Policy",
+    "lastUpdated": "October 2026",
+    "sections": [
+      {
+        "heading": "Hyperlocal 30-Minute Delivery (Hyderabad)",
+        "content": "VAPEHYD guarantees express 30 to 45-minute delivery within Hyderabad city limits. Our dispatch team is active from 10:00 AM to 11:30 PM. Orders placed after hours will be prioritized for the next morning."
+      },
+      {
+        "heading": "Order Tracking & Delays",
+        "content": "Once your order is dispatched, you will receive a WhatsApp notification with live tracking. In rare cases of severe traffic or weather conditions, delivery might take up to 60 minutes. Our support team will keep you updated."
+      },
+      {
+        "heading": "Cash on Delivery (COD) Rules",
+        "content": "COD is available for all hyper-local orders. Our delivery partners carry limited change, so exact tender or UPI payments upon delivery are highly appreciated."
+      }
+    ]
+  },
+  {
+    "slug": "refund-policy",
+    "title": "Return & Refund Policy",
+    "lastUpdated": "October 2026",
+    "sections": [
+      {
+        "heading": "General Returns",
+        "content": "Due to the consumable and hygiene nature of vaping products (e-liquids, disposables, pods), all sales are final. We do not accept returns or exchanges for \"change of mind\" or flavor preferences."
+      },
+      {
+        "heading": "Dead on Arrival (DOA) / Faulty Items",
+        "content": "If you receive a defective device that is Dead on Arrival (DOA), you must contact us via WhatsApp within 24 hours of delivery. You will need to provide video evidence of the defect (e.g., auto-firing, dead battery out of box). If verified, we will issue a replacement."
+      },
+      {
+        "heading": "Refund Process",
+        "content": "Refunds are only issued if a replacement for a DOA item is unavailable in our inventory. Approved refunds are processed back to your original payment method (or UPI) within 3-5 business days."
+      }
+    ]
+  },
+  {
+    "slug": "privacy-policy",
+    "title": "Privacy Policy",
+    "lastUpdated": "October 2026",
+    "sections": [
+      {
+        "heading": "Information We Collect",
+        "content": "We only collect essential information required to fulfill your order, including your name, delivery address, phone number, and email. We do not store your credit/debit card details on our servers."
+      },
+      {
+        "heading": "How We Use Your Data",
+        "content": "Your data is strictly used for order processing, hyper-local delivery logistics, and sending you order updates via WhatsApp. We do not sell or rent your personal information to third-party marketing agencies."
+      },
+      {
+        "heading": "Data Security",
+        "content": "VAPEHYD employs industry-standard encryption to protect your data. All transactions are routed through secure, verified payment gateways."
+      }
+    ]
+  },
+  {
+    "slug": "terms-and-conditions",
+    "title": "Terms and Conditions",
+    "lastUpdated": "October 2026",
+    "sections": [
+      {
+        "heading": "Age Restriction (18+ Only)",
+        "content": "By accessing VAPEHYD, you confirm that you are at least 18 years of age. Vaping products are strictly prohibited for minors. We reserve the right to cancel any order if age verification fails."
+      },
+      {
+        "heading": "Product Use & Authenticity",
+        "content": "All products sold are 100% authentic and come with manufacturer verification codes. VAPEHYD is not liable for any health risks or damages resulting from the misuse or modification of the products sold."
+      },
+      {
+        "heading": "Right to Refuse Service",
+        "content": "We reserve the right to refuse service, terminate accounts, or cancel orders at our sole discretion, especially in cases of suspected fraud or abusive behavior toward our delivery partners."
+      }
+    ]
+  }
+]

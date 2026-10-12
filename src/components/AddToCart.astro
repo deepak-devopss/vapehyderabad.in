@@ -1,0 +1,75 @@
+---
+// src/components/AddToCart.astro
+const { id, name, price, image } = Astro.props;
+---
+
+<button 
+  class="add-to-cart-btn slim-add-btn" 
+  data-id={id} 
+  data-name={name} 
+  data-price={price} 
+  data-image={image}
+>
+  ADD
+</button>
+
+<style>
+  /* Swiggy/Zepto Style Compact Button */
+  .slim-add-btn {
+    background: rgba(255, 62, 108, 0.1); /* Light pink tint */
+    color: #ff3e6c;
+    border: 1px solid rgba(255, 62, 108, 0.4);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .slim-add-btn:active { 
+    transform: scale(0.92); 
+  }
+  .slim-add-btn:hover { 
+    background: #ff3e6c; 
+    color: white;
+  }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll('.add-to-cart-btn');
+  
+  buttons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const product = {
+        id: btn.dataset.id, name: btn.dataset.name,
+        price: parseInt(btn.dataset.price), image: btn.dataset.image, quantity: 1
+      };
+      
+      let cart = JSON.parse(localStorage.getItem('vapeCart')) || [];
+      const existingItem = cart.find(item => item.id === product.id);
+      
+      if (existingItem) { existingItem.quantity += 1; } 
+      else { cart.push(product); }
+      
+      localStorage.setItem('vapeCart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('cartUpdated'));
+      
+      // Compact Success Feedback
+      const originalText = btn.innerHTML;
+      btn.innerHTML = "ADDED ✔";
+      btn.style.background = "#25D366";
+      btn.style.color = "#fff";
+      btn.style.borderColor = "#25D366";
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.background = "rgba(255, 62, 108, 0.1)";
+        btn.style.color = "#ff3e6c";
+        btn.style.borderColor = "rgba(255, 62, 108, 0.4)";
+      }, 1000);
+    });
+  });
+</script>

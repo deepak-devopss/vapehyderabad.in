@@ -1,0 +1,251 @@
+---
+// src/components/WhatsAppLeadPopup.astro
+const gasApiUrl = "https://script.google.com/macros/s/AKfycbwbj4BT5cotMu0Jc51VAlf_sUnJvZfn3IwdqnnGTetXeEHU3fBEAJ6jGsWjSpMGIgpx/exec";
+const targetSheetName = "VapeHyderabad Leads"; 
+---
+
+<div id="vape-wa-lead-overlay" class="wa-hidden">
+  <div id="wa-popup-box" class="wa-popup-box premium-compact-glass">
+    
+    <button id="wa-close-btn" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    
+    <div class="wa-popup-header">
+      <div class="wa-pulse-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.015c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+      </div>
+      <div class="header-text">
+        <h3>Quick Connect</h3>
+        <p>Enter details to open WhatsApp</p>
+      </div>
+    </div>
+    
+    <form id="wa-lead-form">
+      <div class="compact-inputs">
+        <div class="wa-input-wrapper">
+          <span class="icon">👤</span>
+          <input type="text" id="wa-user-name" placeholder="Full Name" required autocomplete="name">
+        </div>
+        <div class="wa-input-wrapper">
+          <span class="icon">📱</span>
+          <input type="tel" id="wa-user-phone" placeholder="WhatsApp No." pattern="[0-9]{10}" maxlength="10" required autocomplete="tel">
+        </div>
+      </div>
+      
+      <button type="submit" id="wa-submit-btn" class="glow-submit-btn">Open WhatsApp <span class="arrow">&rarr;</span></button>
+      
+      <div class="wa-secure-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 
+        <span>100% Secure & Private</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Base States */
+  .wa-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  
+  #vape-wa-lead-overlay { 
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+    z-index: 999999; display: flex; align-items: center; justify-content: center; 
+    transition: opacity 0.3s ease, visibility 0.3s; font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  /* The active state classes for animation */
+  #vape-wa-lead-overlay.wa-active { opacity: 1; visibility: visible; pointer-events: auto; }
+  
+  /* 🔥 COMPACT PREMIUM UI */
+  .wa-popup-box { 
+    background: linear-gradient(145deg, rgba(25,25,25,0.95) 0%, rgba(10,10,10,0.98) 100%);
+    border: 1px solid rgba(255, 62, 108, 0.25); width: 75%; max-width: 320px; /* Reduced width */
+    border-radius: 40px; padding: 24px; position: relative; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255, 62, 108, 0.05); 
+    
+    /* Animation Properties */
+    transform: scale(0); opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease; /* Bouncy Effect */
+  }
+  #vape-wa-lead-overlay.wa-active .wa-popup-box { transform: scale(1); opacity: 1; }
+  
+  /* Close Button */
+  #wa-close-btn { 
+    position: absolute; top: 12px; right: 16px; background: rgba(255,255,255,0.05); 
+    border: none; border-radius: 50%; width: 28px; height: 28px; color: #888; 
+    cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+  }
+  #wa-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; transform: scale(1.1);}
+  
+  /* Header Section */
+  .wa-popup-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px;}
+  .wa-pulse-icon { 
+    width: 44px; height: 44px; background: linear-gradient(135deg, #25D366 0%, #1ebd5a 100%); 
+    color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; 
+    box-shadow: 0 4px 15px rgba(37,211,102,0.3); flex-shrink: 0;
+  }
+  .wa-pulse-icon svg { width: 24px; height: 24px; }
+  .header-text h3 { font-size: 1.1rem; font-weight: 800; color: #fff; margin: 0 0 4px 0; }
+  .header-text p { font-size: 0.8rem; color: #aaa; margin: 0; line-height: 1.2; }
+  
+  /* Compact Inputs */
+  .compact-inputs { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+  .wa-input-wrapper { 
+    position: relative; display: flex; align-items: center; 
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 12px; transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .wa-input-wrapper:focus-within { border-color: #25D366; box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1); background: rgba(37, 211, 102, 0.05);}
+  .wa-input-wrapper .icon { padding: 0 12px; font-size: 1rem; opacity: 0.7; }
+  .wa-input-wrapper input { 
+    width: 100%; padding: 14px 14px 14px 0; border: none; background: transparent; 
+    font-size: 0.95rem; color: #fff; outline: none; 
+  }
+  .wa-input-wrapper input::placeholder { color: #666; font-size: 0.9rem; }
+  
+  /* Button */
+  .glow-submit-btn { 
+    width: 100%; padding: 14px; background: linear-gradient(135deg, #ff3e6c 0%, #e62c58 100%); 
+    color: #fff; font-size: 0.95rem; font-weight: 800; border: none; border-radius: 12px; 
+    cursor: pointer; transition: all 0.3s; 
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    box-shadow: 0 8px 15px rgba(255, 62, 108, 0.3);
+  }
+  .glow-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 20px rgba(255, 62, 108, 0.5); }
+  .glow-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+  .arrow { font-size: 1.1rem; transition: transform 0.2s;}
+  .glow-submit-btn:hover .arrow { transform: translateX(4px); }
+  
+  /* Secure Text */
+  .wa-secure-badge { 
+    text-align: center; font-size: 0.75rem; color: #666; margin-top: 14px; 
+    display: flex; align-items: center; justify-content: center; gap: 4px; font-weight: 600; 
+  }
+  .wa-secure-badge svg { width: 12px; height: 12px; color: #25D366;}
+</style>
+
+<script define:vars={{ gasApiUrl, targetSheetName }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('vape-wa-lead-overlay');
+    const popupBox = document.getElementById('wa-popup-box');
+    const closeBtn = document.getElementById('wa-close-btn');
+    const form = document.getElementById('wa-lead-form');
+    const submitBtn = document.getElementById('wa-submit-btn');
+    
+    let targetWaLink = "";
+    let extractedData = {};
+
+    // 🔥 DYNAMIC ORIGIN FOR ANIMATION
+    let originX = window.innerWidth / 2;
+    let originY = window.innerHeight / 2;
+
+    function triggerLeadPopup(url) {
+      targetWaLink = url;
+      let urlObj;
+      try { urlObj = new URL(targetWaLink); } catch(err) { return; }
+      let messageBody = decodeURIComponent(urlObj.searchParams.get('text') || "");
+
+      extractedData = { productName: "General Inquiry", price: "N/A", productLink: window.location.href };
+
+      // Astro Text Parser
+      let pMatch = messageBody.match(/\*([^*]+)\*/); 
+      if(pMatch) extractedData.productName = pMatch[1].trim();
+      let prMatch = messageBody.match(/Price:\s*₹?\s*([0-9,.]+)/i); 
+      if(prMatch) extractedData.price = prMatch[1].trim();
+
+      // SET TRANSFORM ORIGIN SO IT "GROWS" FROM THE CLICKED BUTTON
+      popupBox.style.transformOrigin = `${originX}px ${originY}px`;
+
+      // Open Popup with classes
+      overlay.classList.remove('wa-hidden');
+      // Tiny delay to ensure browser paints the origin before adding the scale(1) class
+      setTimeout(() => {
+        overlay.classList.add('wa-active');
+      }, 10);
+      document.body.style.overflow = 'hidden'; 
+    }
+
+    // 1. Intercept Standard <a> Clicks (Captures Mouse Coordinates!)
+    document.addEventListener('click', function(e) {
+      const waElement = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
+      if (waElement) {
+        e.preventDefault(); 
+        // Get Exact Coordinates of the Button
+        const rect = waElement.getBoundingClientRect();
+        originX = rect.left + (rect.width / 2);
+        originY = rect.top + (rect.height / 2);
+        
+        triggerLeadPopup(waElement.getAttribute('href'));
+      }
+    });
+
+    // 2. The Monkey Patch (If triggered by JS window.open)
+    const originalWindowOpen = window.open;
+    window.open = function(url, target, features) {
+      if (typeof url === 'string' && (url.includes('wa.me') || url.includes('api.whatsapp.com'))) {
+        // If from JS, we just pop it from center
+        originX = window.innerWidth / 2; originY = window.innerHeight / 2;
+        triggerLeadPopup(url);
+        return null;
+      }
+      return originalWindowOpen.call(window, url, target, features);
+    };
+
+    // 3. Close Logic (Shrinks back to button)
+    const closePopup = () => {
+      overlay.classList.remove('wa-active'); // Triggers shrink animation
+      
+      // Wait for CSS animation to finish before fully hiding
+      setTimeout(() => {
+        overlay.classList.add('wa-hidden');
+        document.body.style.overflow = '';
+        form.reset();
+        submitBtn.innerHTML = 'Open WhatsApp <span class="arrow">&rarr;</span>';
+        submitBtn.disabled = false;
+      }, 350); 
+    };
+    closeBtn.addEventListener('click', closePopup);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closePopup(); });
+
+    // 🔥 HELPER: MOBILE VS DESKTOP REDIRECT (Fixes Same Screen Issue)
+    const openWhatsAppDirectly = () => {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        // Direct App Deep-Link for phones
+        window.location.href = targetWaLink;
+      } else {
+        // Desktop browser tab
+        window.open(targetWaLink, '_blank');
+      }
+    };
+
+    // 4. Form Submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const userName = document.getElementById('wa-user-name').value;
+      const userPhone = document.getElementById('wa-user-phone').value;
+
+      const payload = {
+        sheetName: targetSheetName, domain: window.location.hostname || 'vapehyderabad.in',
+        customerName: userName, whatsappNumber: userPhone,
+        productName: extractedData.productName, price: extractedData.price, productLink: extractedData.productLink
+      };
+
+      submitBtn.innerHTML = "Connecting <span class='pulse-dot' style='display:inline-block; width:8px;height:8px;background:#fff;border-radius:50%;animation:blink 1s infinite;'></span>";
+      submitBtn.disabled = true;
+
+      fetch(gasApiUrl, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
+      })
+      .then(() => {
+        openWhatsAppDirectly(); // 🔥 Fixed Redirect Logic
+        closePopup();
+      })
+      .catch(() => {
+        openWhatsAppDirectly(); // 🔥 Fixed Redirect Logic
+        closePopup();
+      });
+    });
+  });
+</script>

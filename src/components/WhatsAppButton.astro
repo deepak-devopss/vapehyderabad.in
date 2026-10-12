@@ -1,0 +1,45 @@
+---
+// src/components/WhatsAppButton.astro
+import { siteConfig } from '../config/site.js';
+
+// Jis product/page par ye button lagayenge, wahan se 'productName' pass karenge
+const { productName } = Astro.props;
+
+// Astro automatically current page ka pura URL nikal lega
+const currentUrl = Astro.url.href; 
+
+// Dynamic aur attractive message condition ke hisaab se
+let rawMessage = "";
+if (productName) {
+  rawMessage = `Hey Vape Hyderabad! 💨\n\nI'm interested in buying *${productName}*. Is this available?\n\n🔗 Product Link: ${currentUrl}`;
+} else {
+  rawMessage = `Hey Vape Hyderabad! 💨\n\nI was browsing your store and need some help.\n\n🔗 Page Link: ${currentUrl}`;
+}
+
+// URL format ke liye message ko encode karna zaroori hai (spaces ko %20 wagera mein convert karne ke liye)
+const encodedMessage = encodeURIComponent(rawMessage);
+const whatsappLink = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`;
+---
+
+<!-- Beautiful WhatsApp Button (Aap iski CSS baad mein Tailwind ya apne custom styles se modify kar sakte hain) -->
+<a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="wa-button">
+  💬 Order via WhatsApp
+</a>
+
+<style>
+  .wa-button {
+    display: inline-flex;
+    align-items: center;
+    background-color: #25D366;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: sans-serif;
+    transition: background-color 0.3s ease;
+  }
+  .wa-button:hover {
+    background-color: #128C7E;
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+// src/layouts/BaseLayout.astro
+import { SEO } from 'astro-seo';
+import { siteConfig } from '../config/site.js';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppLeadPopup from '../components/WhatsAppLeadPopup.astro';
+import MobileBottomNav from '../components/MobileBottomNav.astro';
+
+// Page se title aur description props receive kar rahe hain
+const { title, description } = Astro.props;
+
+// Agar page specific title pass kiya hai, toh use dikhao warna default name
+const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Advanced SEO injected by astro-seo -->
+    <SEO
+      title={pageTitle}
+      description={description || siteConfig.defaultDescription}
+      openGraph={{
+        basic: {
+          title: pageTitle,
+          type: "website",
+          image: `${siteConfig.url}/og-image.jpg`, // Apna Open Graph image URL daalein
+        }
+      }}
+      extend={{
+        meta: [{ name: "robots", content: "index, follow" }]
+      }}
+    />
+  </head>
+  <body style="margin: 0; background-color: #000000; color: #ffffff; padding-bottom: 90px;">
+    
+    <!-- Yahan humne Header component ko add kar diya hai -->
+    <Header />
+    
+    <main>
+      <slot /> <!-- Ye "<slot />" vo jagah hai jahan alag-alag pages ka content load hoga -->
+    </main>
+
+    <!-- Global Cart State Manager -->
+    <script>
+      function updateCartBadge() {
+        const cart = JSON.parse(localStorage.getItem('vapeCart')) || [];
+        let totalCount = 0;
+        cart.forEach(item => totalCount += item.quantity);
+        
+        const countBadge = document.getElementById('cart-count');
+        if (countBadge) {
+          countBadge.innerText = totalCount;
+          // Agar cart khali hai to badge hide kar do
+          countBadge.style.display = totalCount > 0 ? 'flex' : 'none';
+        }
+      }
+      
+      // Page load hote hi cart count update karo
+      updateCartBadge();
+      
+      // Jab bhi koi naya item add ho, badge update karo
+      window.addEventListener('cartUpdated', updateCartBadge);
+    </script>
+
+    <!-- Hum yahan Footer.astro component baad mein daalenge -->
+    <Footer />
+
+    <WhatsAppLeadPopup />
+
+    <MobileBottomNav />
+
+  </body>
+</html>

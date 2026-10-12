@@ -1,0 +1,361 @@
+---
+// src/components/Header.astro
+import { siteConfig } from '../config/site.js';
+import products from '../data/products.json';
+
+// 🔥 Top 10 Trending Locations for Dropdown
+const topLocations = [
+  "Banjara Hills", "Jubilee Hills", "Hitech City", "Madhapur", "Gachibowli", 
+  "Kondapur", "Kukatpally", "Secunderabad", "Ameerpet", "Dilsukhnagar"
+];
+---
+
+<div id="main-header-wrapper" class="header-wrapper">
+  <header class="app-header modern-glass">
+    <div class="header-top">
+      
+      <!-- Left: Hamburger & Logo -->
+      <div class="header-left">
+        <button id="menu-toggle" class="menu-btn" aria-label="Menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="15" y2="18"></line>
+          </svg>
+        </button>
+        <a href="/" class="brand-logo">
+          <span class="logo-text">VAPE<span class="logo-accent">HYD</span></span>
+        </a>
+      </div>
+
+      <!-- Right: Location, Search, Cart Icons -->
+      <div class="header-actions">
+        
+        <!-- 🔥 Location Icon with Dropdown -->
+        <div class="location-wrapper-relative">
+          <button class="icon-btn" id="location-btn" aria-label="Location">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </button>
+          
+          <!-- Dropdown Menu -->
+          <div id="location-dropdown" class="location-dropdown hidden">
+            <div class="dropdown-header">
+              <span class="pulse-dot"></span> Fast Delivery In:
+            </div>
+            <ul class="loc-list">
+              {topLocations.map(loc => {
+                const slug = loc.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                return <li><a href={`/location/${slug}`}>{loc}</a></li>;
+              })}
+            </ul>
+            <!-- Link to homepage section -->
+            <a href="/#locations-section" class="view-all-locs" onclick="document.getElementById('location-dropdown').classList.add('hidden');">
+              View All Locations →
+            </a>
+          </div>
+        </div>
+
+        <!-- Search Icon Toggle -->
+        <button class="icon-btn" id="search-toggle-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+
+        <!-- Cart Icon -->
+        <a href="/cart" class="icon-btn cart-btn" aria-label="Cart">
+          <div class="cart-icon-wrapper">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            <span id="cart-count" class="cart-badge" style="display:none;">0</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Collapsible Premium Search Bar -->
+    <div id="search-container" class="search-container hidden">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="live-search" placeholder="Search premium vapes..." autocomplete="off" />
+        <button id="close-search" class="close-search-btn">✖</button>
+      </div>
+      <ul id="search-suggestions" class="suggestions-dropdown"></ul>
+    </div>
+  </header>
+</div>
+
+<!-- 🔥 Premium Drawer Menu (iOS Style Smooth Animation) -->
+<div id="side-drawer" class="side-drawer premium-drawer">
+  <div class="drawer-header">
+    <div class="brand-logo"><span class="logo-text">VAPE<span class="logo-accent">HYD</span></span></div>
+    <button id="close-menu" class="close-btn" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  
+  <div class="drawer-content">
+    <ul class="drawer-links">
+      <li><a href="/"><span class="icon">🏠</span> Home</a></li>
+      <li><a href="/shop"><span class="icon">🛍️</span> All Vapes</a></li>
+      <li><a href="/offers"><span class="icon">🔥</span> Mega Sale</a></li>
+      <li><a href="/#locations-section"><span class="icon">📍</span> Delivery Areas</a></li>
+      <li><a href="/about"><span class="icon">ℹ️</span> About Us</a></li>
+      <li><a href="/contact"><span class="icon">📞</span> Contact Support</a></li>
+    </ul>
+    
+    <div class="drawer-footer">
+      <p class="drawer-title">Legal</p>
+      <div class="legal-links">
+        <a href="/policies/privacy-policy">Privacy</a>
+        <a href="/policies/refund-policy">Refunds</a>
+        <a href="/policies/terms-and-conditions">Terms</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="drawer-overlay" class="drawer-overlay"></div>
+
+<!-- STATIC STYLES -->
+<style>
+  /* STOP ZOOM ON DOUBLE TAP FOR ALL INTERACTIVE ELEMENTS */
+  button, a, input { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+
+  .header-wrapper { 
+    position: sticky; top: 12px; z-index: 100; padding: 0 12px; 
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  }
+  .header-wrapper.scroll-hide { transform: translateY(-150%); opacity: 0; }
+
+  .app-header.modern-glass {
+    background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+  }
+  
+  .header-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; min-height: 64px; }
+  .header-left { display: flex; align-items: center; gap: 12px; height: 100%; }
+  .header-actions { display: flex; align-items: center; gap: 12px; height: 100%; }
+  
+  .brand-logo { text-decoration: none; display: flex; align-items: center; margin-top: 2px; }
+  .logo-text { font-size: 1.25rem; font-weight: 900; color: #fff; letter-spacing: 1px; font-family: system-ui; line-height: 1; }
+  .logo-accent { color: #ff3e6c; }
+  
+  .menu-btn, .icon-btn { 
+    background: none; border: none; cursor: pointer; padding: 0; margin: 0;
+    width: 36px; height: 36px; display: flex; justify-content: center; align-items: center; 
+    color: #fff; transition: transform 0.2s; 
+  }
+  .menu-btn:active, .icon-btn:active { transform: scale(0.85); }
+  .cart-btn { text-decoration: none; }
+  
+  .cart-icon-wrapper {
+    background: rgba(255, 255, 255, 0.08); width: 40px; height: 40px; border-radius: 50%; 
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  
+  .cart-badge {
+    position: absolute; top: -4px; right: -4px; background: #ff3e6c; color: white;
+    font-size: 0.7rem; font-weight: 800; height: 18px; min-width: 18px; 
+    display: flex; align-items: center; justify-content: center; border-radius: 20px; padding: 0 5px; 
+    border: 2px solid #141414; box-sizing: border-box; line-height: 1;
+  }
+
+  /* --- 🔥 LOCATION DROPDOWN --- */
+  .location-wrapper-relative { position: relative; }
+  .location-dropdown {
+    position: absolute; top: 120%; right: -50px; width: 220px;
+    background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8); z-index: 200;
+    opacity: 1; transform: translateY(0); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top right;
+  }
+  @media (min-width: 768px) { .location-dropdown { right: 0; width: 250px; } }
+  
+  .location-dropdown.hidden { opacity: 0; transform: scale(0.95) translateY(-10px); pointer-events: none; }
+  
+  .dropdown-header {
+    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.8rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pulse-dot { width: 8px; height: 8px; background: #25D366; border-radius: 50%; box-shadow: 0 0 8px #25D366; animation: blink 1.5s infinite; }
+  @keyframes blink { 50% { opacity: 0.4; } }
+  
+  .loc-list { list-style: none; padding: 8px 0; margin: 0; max-height: 250px; overflow-y: auto; }
+  .loc-list li a {
+    display: block; padding: 10px 16px; color: #fff; text-decoration: none; font-size: 0.9rem; font-weight: 600;
+    transition: background 0.2s, padding-left 0.2s; border-left: 2px solid transparent;
+  }
+  .loc-list li a:hover { background: rgba(255,255,255,0.05); padding-left: 20px; border-left-color: #ff3e6c; color: #ff3e6c; }
+  
+  .view-all-locs {
+    display: block; text-align: center; padding: 12px; background: rgba(255, 62, 108, 0.1);
+    color: #ff3e6c; text-decoration: none; font-size: 0.85rem; font-weight: 800;
+    border-top: 1px solid rgba(255,255,255,0.05); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; transition: background 0.2s;
+  }
+  .view-all-locs:hover { background: #ff3e6c; color: #fff; }
+
+  /* Search UI */
+  .search-container { padding: 0 16px 16px; position: relative; display: block; opacity: 1; transform: translateY(0); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+  .search-container.hidden { display: none; opacity: 0; transform: translateY(-10px); }
+  .search-box { display: flex; align-items: center; background: #000; padding: 8px 16px; border-radius: 12px; gap: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+  .search-box input { border: none; background: transparent; width: 100%; font-size: 16px; outline: none; color: #fff; padding: 4px 0; }
+  .close-search-btn { background: none; border: none; color: #666; cursor: pointer; font-size: 1rem; padding: 4px; }
+  .suggestions-dropdown { position: absolute; top: 100%; left: 16px; right: 16px; background: #121212; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; margin-top: 8px; padding: 8px; list-style: none; max-height: 350px; overflow-y: auto; display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.8); z-index: 100; }
+
+  /* --- 🔥 PREMIUM DRAWER UI --- */
+  .side-drawer.premium-drawer {
+    position: fixed; top: 0; left: 0; width: 300px; height: 100vh; 
+    background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255,255,255,0.05); z-index: 1000; display: flex; flex-direction: column; 
+    transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+  }
+  .side-drawer.open { transform: translateX(0); box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
+  
+  .drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .close-btn { background: rgba(255, 255, 255, 0.05); border: none; border-radius: 50%; padding: 8px; cursor: pointer; display: flex; align-items: center; transition: background 0.2s;}
+  .close-btn:hover { background: rgba(255, 62, 108, 0.2); }
+  
+  .drawer-content { padding: 30px 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto;}
+  .drawer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  
+  .drawer-links a { 
+    text-decoration: none; color: #aaa; font-size: 1.1rem; font-weight: 600; 
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; 
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid transparent;
+  }
+  .drawer-links a .icon { font-size: 1.2rem; }
+  .drawer-links a:hover, .drawer-links a:active { 
+    background: rgba(255, 62, 108, 0.1); color: #fff; border-color: rgba(255, 62, 108, 0.2); transform: translateX(5px); 
+  }
+  
+  .drawer-footer { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; margin-top: 20px;}
+  .drawer-title { color: #666; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 1px;}
+  .legal-links { display: flex; flex-wrap: wrap; gap: 12px; }
+  .legal-links a { color: #888; font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+  .legal-links a:hover { color: #ff3e6c; }
+
+  .drawer-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(4px); }
+  .drawer-overlay.visible { opacity: 1; pointer-events: auto; }
+</style>
+
+<!-- DYNAMIC GLOBAL STYLES (SEARCH RESULTS) -->
+<style is:global>
+  .suggestion-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-radius: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s; }
+  .suggestion-item:last-child { border-bottom: none; }
+  .suggestion-item:hover { background: rgba(255,255,255,0.05); }
+  .suggest-left { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; overflow: hidden; }
+  .suggest-img { width: 44px !important; height: 44px !important; min-width: 44px !important; max-width: 44px !important; background: #ffffff; border-radius: 10px; display: flex; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; flex-shrink: 0 !important; }
+  .suggest-img img { width: 100% !important; height: 100% !important; object-fit: contain !important; padding: 2px; display: block; }
+  .suggest-info { display: flex; flex-direction: column; overflow: hidden; }
+  .suggest-name { color: #fff; font-size: 0.9rem; font-weight: 600; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .suggest-price { color: #ff3e6c; font-weight: 700; font-size: 0.85rem; margin-top: 4px; }
+  .suggest-add-btn { background: rgba(255, 62, 108, 0.15) !important; border: 1px solid rgba(255, 62, 108, 0.3) !important; color: #ff3e6c !important; width: 32px !important; height: 32px !important; border-radius: 50% !important; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.2rem; transition: all 0.2s; flex-shrink: 0; padding: 0; }
+  .suggest-add-btn:active { transform: scale(0.9); }
+</style>
+
+<script define:vars={{ products }}>
+  // Scroll Hide Logic
+  let lastScrollTop = 0;
+  const headerWrapper = document.getElementById('main-header-wrapper');
+  const searchContainer = document.getElementById('search-container');
+  
+  window.addEventListener('scroll', () => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop && scrollTop > 100 && searchContainer.classList.contains('hidden')) {
+      headerWrapper.classList.add('scroll-hide');
+    } else {
+      headerWrapper.classList.remove('scroll-hide');
+    }
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+  }, false);
+
+  // --- 🔥 Location Dropdown Logic ---
+  const locBtn = document.getElementById('location-btn');
+  const locDropdown = document.getElementById('location-dropdown');
+  
+  locBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    locDropdown.classList.toggle('hidden');
+    // Hide search if open
+    searchContainer.classList.add('hidden');
+  });
+
+  // Click outside to close dropdown
+  document.addEventListener('click', (e) => {
+    if (!locDropdown.contains(e.target) && !locBtn.contains(e.target)) {
+      locDropdown.classList.add('hidden');
+    }
+  });
+
+  // Search Logic
+  const searchToggleBtn = document.getElementById('search-toggle-btn');
+  const closeSearchBtn = document.getElementById('close-search');
+  const searchInput = document.getElementById('live-search');
+  const searchBox = document.getElementById('search-suggestions');
+
+  searchToggleBtn?.addEventListener('click', () => {
+    searchContainer.classList.remove('hidden');
+    searchInput.focus();
+    locDropdown.classList.add('hidden'); // Close location dropdown if open
+  });
+  
+  closeSearchBtn?.addEventListener('click', () => {
+    searchContainer.classList.add('hidden');
+    searchInput.value = '';
+    searchBox.style.display = 'none';
+  });
+
+  // --- 🔥 Drawer Menu Logic (Smooth iOS Style) ---
+  const menuBtn = document.getElementById('menu-toggle');
+  const sideDrawer = document.getElementById('side-drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  const closeMenuBtn = document.getElementById('close-menu');
+
+  function toggleMenu() {
+    sideDrawer.classList.toggle('open');
+    overlay.classList.toggle('visible');
+    document.body.style.overflow = sideDrawer.classList.contains('open') ? 'hidden' : '';
+  }
+  menuBtn?.addEventListener('click', toggleMenu);
+  closeMenuBtn?.addEventListener('click', toggleMenu);
+  overlay?.addEventListener('click', toggleMenu);
+
+  // Search Input Processing
+  searchInput?.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    if (query.length >= 2) {
+      const filtered = products.filter(product => product.name.toLowerCase().includes(query));
+      
+      if (filtered.length > 0) {
+        searchBox.innerHTML = filtered.map(item => {
+          const imgHtml = item.image.includes('http') || item.image.includes('/') 
+            ? `<img src="${item.image}" alt="${item.name}" />` 
+            : `<span>${item.image}</span>`;
+            
+          // 🔥 BUG FIX: Using slug for search suggestions click
+          const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+            
+          return `
+          <li class="suggestion-item">
+            <div class="suggest-left" onclick="window.location.href='/product/${slug}'; document.getElementById('search-container').classList.add('hidden');">
+              <div class="suggest-img">${imgHtml}</div>
+              <div class="suggest-info">
+                <span class="suggest-name">${item.name}</span>
+                <span class="suggest-price">₹${item.sale_price}</span>
+              </div>
+            </div>
+            <button class="suggest-add-btn global-add-btn" data-id="${item.id}" data-name="${item.name}" data-price="${item.sale_price}" data-image="${item.image}">+</button>
+          </li>
+        `}).join('');
+        searchBox.style.display = 'block';
+      } else {
+        searchBox.innerHTML = `<li style="padding: 16px; color: #666; text-align: center;">No products found</li>`;
+        searchBox.style.display = 'block';
+      }
+    } else {
+      searchBox.style.display = 'none';
+    }
+  });
+
+  // ID add kiya hai link karne ke liye
+</script>

@@ -1,0 +1,126 @@
+---
+// src/components/RichTextWithImage.astro
+---
+
+<section class="seo-rich-text">
+  <div class="content-wrapper">
+    
+    <!-- Image Box (Compact on Mobile: 4/3 Aspect Ratio) -->
+    <div class="image-container">
+      <!-- Abhi ek placeholder image hai (Unsplash se), future me apni image ka URL dal dena -->
+      <img 
+        src="https://dbh4s5ja0maaw.cloudfront.net/eb/elfa-filter-series/floor4/p4-2x.jpg?v=1" 
+        alt="Premium vaping devices at the best vape shop in hyderabad" 
+        loading="lazy" 
+      />
+      <div class="glass-overlay">
+        <span>Verified Original</span>
+      </div>
+    </div>
+
+    <!-- SEO Optimized Text Box -->
+    <div class="text-container">
+      <!-- H2 used for strict SEO hierarchy (H1 is already in HeroBanner) -->
+      <h2 class="seo-h2">The <span class="highlight">Best Vape Shop Hyderabad</span> Has to Offer</h2>
+      
+      <h3 class="seo-h3">Authenticity & Variety You Can Trust</h3>
+      
+      <p>
+        When searching for a reliable <strong>vape in Hyderabad</strong>, quality and authenticity matter most. We pride ourselves on being the go-to <strong>vape shop Hyderabad</strong> enthusiasts trust. From top-tier disposable pods to premium e-liquids, every product is sourced directly from official manufacturers to guarantee a smooth experience. 
+      </p>
+      
+      <p>
+        Our commitment to customer satisfaction and 30-minute express delivery ensures you never have to wait. Curious about industry standards? You can read more about vaping guidelines on <a href="https://casaa.org/" target="_blank" rel="nofollow noopener" class="external-link">CASAA's official site</a> or simply explore our exclusive collection tailored for you.
+      </p>
+
+      <!-- Trust Stats -->
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-num">5k+</span>
+          <span class="stat-label">Happy Clients</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Genuine Brands</span>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<style>
+  /* --- Compact Mobile-First Rich Text UI --- */
+  .seo-rich-text {
+    max-width: 1200px; 
+    margin: 40px auto 60px; 
+    padding: 0 16px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  .content-wrapper {
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px;
+    background: rgba(22, 22, 22, 0.5); 
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px; 
+    padding: 16px; /* Compact mobile padding */
+    overflow: hidden;
+  }
+  
+  @media (min-width: 992px) {
+    .content-wrapper { flex-direction: row; align-items: center; padding: 40px; gap: 40px; }
+  }
+  
+  /* Image Styling */
+  .image-container {
+    position: relative; 
+    flex: 1; 
+    border-radius: 16px; 
+    overflow: hidden;
+    aspect-ratio: 4/3; /* Forces a compact rectangle on mobile */
+  }
+  .image-container img {
+    width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;
+  }
+  .image-container:hover img { transform: scale(1.05); }
+  
+  .glass-overlay {
+    position: absolute; bottom: 12px; left: 12px;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); color: #fff;
+    padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; 
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Text & Typography */
+  .text-container { 
+    flex: 1.2; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+  }
+  
+  .seo-h2 { font-size: 1.6rem; color: #fff; margin: 0 0 6px 0; font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; }
+  .highlight { color: #ff3e6c; }
+  .seo-h3 { font-size: 1rem; color: #ccc; margin: 0 0 16px 0; font-weight: 600; }
+  
+  .text-container p { color: #aaa; font-size: 0.95rem; line-height: 1.6; margin: 0 0 16px 0; font-weight: 400; }
+  .text-container strong { color: #fff; font-weight: 600; } /* Highlight keywords slightly */
+  
+  .external-link { 
+    color: #ff3e6c; text-decoration: none; 
+    border-bottom: 1px dashed rgba(255, 62, 108, 0.5); 
+    transition: all 0.2s; 
+  }
+  .external-link:hover { color: #fff; border-bottom-color: #fff; }
+
+  /* Stats Section */
+  .stats-row { 
+    display: flex; gap: 24px; margin-top: 8px; 
+    border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; 
+  }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-num { color: #fff; font-size: 1.4rem; font-weight: 800; }
+  .stat-label { color: #666; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+</style>

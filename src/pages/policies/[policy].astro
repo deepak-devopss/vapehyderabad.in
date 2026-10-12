@@ -1,0 +1,114 @@
+---
+// src/pages/policies/[policy].astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import policiesData from '../../data/policies.json';
+
+export async function getStaticPaths() {
+  return policiesData.map((policy) => {
+    return {
+      params: { policy: policy.slug },
+      props: { policy }
+    };
+  });
+}
+
+const { policy } = Astro.props;
+
+const title = `${policy.title} | VAPEHYD`;
+const description = `Read the official ${policy.title} for VAPEHYD. Learn about our terms, shipping guidelines, and return procedures for vape products in Hyderabad.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="policy-wrapper">
+    
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+      <a href="/">Home</a> <span class="separator">›</span>
+      <span class="current-page">{policy.title}</span>
+    </nav>
+
+    <div class="policy-layout">
+      
+      <!-- Sticky Sidebar Navigation for Policies -->
+      <aside class="policy-sidebar">
+        <div class="sidebar-box glass-card">
+          <h3>Legal Information</h3>
+          <ul class="policy-nav">
+            {policiesData.map((p) => (
+              <li>
+                <a href={`/policies/${p.slug}`} class={p.slug === Astro.params.policy ? 'active' : ''}>
+                  {p.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Policy Content -->
+      <main class="policy-content glass-card">
+        <div class="content-header">
+          <h1 class="page-title">{policy.title}</h1>
+          <p class="last-updated">Last Updated: {policy.lastUpdated}</p>
+        </div>
+
+        <div class="content-body">
+          {policy.sections.map((section, index) => (
+            <div class="policy-section">
+              <h2><span>{index + 1}.</span> {section.heading}</h2>
+              <p>{section.content}</p>
+            </div>
+          ))}
+        </div>
+        
+        <div class="support-footer">
+          <p>If you have any questions regarding this policy, please <a href="/contact">Contact Support</a>.</p>
+        </div>
+      </main>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .policy-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 16px 80px; font-family: system-ui, -apple-system, sans-serif; }
+  
+  .breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 20px 0 30px; font-size: 0.85rem; color: #888; font-weight: 600; }
+  .breadcrumbs a { color: #ff3e6c; text-decoration: none; }
+  .current-page { color: #fff; }
+
+  .policy-layout { display: flex; flex-direction: column; gap: 30px; }
+  @media (min-width: 992px) { .policy-layout { flex-direction: row; align-items: flex-start; } }
+
+  /* Reusable Glass Card */
+  .glass-card { background: linear-gradient(145deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+
+  /* Sidebar Navigation */
+  .policy-sidebar { width: 100%; }
+  @media (min-width: 992px) { .policy-sidebar { width: 300px; flex-shrink: 0; position: sticky; top: 100px; } }
+  .sidebar-box { padding: 30px 24px; }
+  .sidebar-box h3 { color: #fff; font-size: 1.2rem; margin: 0 0 20px; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+  
+  .policy-nav { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .policy-nav a { display: block; color: #888; text-decoration: none; font-size: 0.95rem; font-weight: 600; padding: 12px 16px; border-radius: 12px; transition: all 0.2s; background: rgba(0,0,0,0.3); border: 1px solid transparent; }
+  .policy-nav a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .policy-nav a.active { color: #ff3e6c; background: rgba(255, 62, 108, 0.1); border-color: rgba(255, 62, 108, 0.3); }
+
+  /* Main Content Area */
+  .policy-content { flex: 1; min-width: 0; padding: 40px 24px; }
+  @media (min-width: 768px) { .policy-content { padding: 50px 40px; } }
+  
+  .content-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 24px; margin-bottom: 30px; }
+  .page-title { color: #fff; font-size: 2rem; margin: 0 0 10px; font-weight: 900; }
+  @media (min-width: 768px) { .page-title { font-size: 2.8rem; } }
+  .last-updated { color: #888; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+
+  .content-body { display: flex; flex-direction: column; gap: 40px; }
+  .policy-section h2 { color: #fff; font-size: 1.3rem; margin: 0 0 16px; font-weight: 800; display: flex; align-items: baseline; gap: 10px; }
+  .policy-section h2 span { color: #ff3e6c; font-size: 1.1rem; }
+  .policy-section p { color: #aaa; font-size: 1.05rem; line-height: 1.8; margin: 0; }
+  
+  .support-footer { margin-top: 50px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+  .support-footer p { color: #888; font-size: 0.95rem; margin: 0; }
+  .support-footer a { color: #ff3e6c; text-decoration: none; font-weight: 700; }
+  .support-footer a:hover { text-decoration: underline; }
+</style>

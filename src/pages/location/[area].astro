@@ -1,0 +1,282 @@
+---
+// src/pages/location/[area].astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import products from '../../data/products.json';
+import { siteConfig } from '../../config/site.js';
+
+export async function getStaticPaths() {
+  const hyderabadAreas = [
+    "Banjara Hills", "Jubilee Hills", "Hitech City", "Madhapur", "Gachibowli", 
+    "Kondapur", "Kukatpally", "Miyapur", "Ameerpet", "Begumpet", "Secunderabad", 
+    "Somajiguda", "Manikonda", "Tolichowki", "Dilsukhnagar", "LB Nagar", "Uppal", 
+    "Tarnaka", "Malkajgiri", "Mehdipatnam", "Attapur", "Shamshabad", "KPHB Colony", 
+    "Pragathi Nagar", "Nizampet", "Bachupally", "Hafeezpet", "Chandanagar", 
+    "Lingampally", "Tellapur", "Nanakramguda", "Financial District", "Kokapet", 
+    "Gandipet", "Puppalaguda", "Khairatabad", "Lakdikapul", "Abids", "Koti", 
+    "Himayatnagar", "Narayanguda", "Basheerbagh", "Chikkadpally", "Musheerabad", 
+    "Alwal", "Bowenpally", "Sanath Nagar", "Balanagar", "Jeedimetla", "Kompally", 
+    "Bolarum", "ECIL", "AS Rao Nagar", "Neredmet"
+  ];
+
+  return hyderabadAreas.map((area, index) => {
+    const slug = area.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const otherAreas = hyderabadAreas.filter(a => a !== area).sort(() => 0.5 - Math.random()).slice(0, 15);
+
+    return {
+      params: { area: slug },
+      props: { areaName: area, otherAreas, index }
+    };
+  });
+}
+
+const { areaName, otherAreas, index } = Astro.props;
+
+// 🔥 DYNAMIC PRODUCTS: Har city page par alag set of products dikhenge (Anti-Spam & Fresh look)
+const startIndex = index % (products.length - 8 > 0 ? products.length - 8 : 1);
+const localProducts = products.slice(startIndex, startIndex + 8);
+
+// ANTI-SPAM CONTENT SPINTAX
+const templates = [
+  {
+    h2: `Premium Vape Delivery in ${areaName}`,
+    p1: `Are you looking for a trusted <strong>vape shop in ${areaName}</strong>? VAPEHYD is your ultimate destination. We understand that residents and professionals in ${areaName} value quality and speed. That's why we bring the finest collection of authentic disposable vapes, pods, and e-liquids right to your doorstep.`,
+    p2: `Say goodbye to the hassle of finding a physical vape store nearby. Whether you are at home or work in ${areaName}, our rapid dispatch team ensures that your favorite vaping gear reaches you within 30 minutes.`
+  },
+  {
+    h2: `Top Rated Vape Store near ${areaName}`,
+    p1: `Finding 100% genuine vaping products can be challenging, but not when you choose VAPEHYD for your <strong>vape delivery in ${areaName}</strong>. Our expansive inventory features top global brands like Elfbar and IGET, ensuring you get exactly what you desire without any fake clones.`,
+    p2: `The vaping community in ${areaName} deserves the absolute best. We provide unparalleled customer service, massive stock availability, and a strict 30 to 45-minute express delivery network specifically catering to the ${areaName} region.`
+  },
+  {
+    h2: `Authentic Vapes Delivered Fast to ${areaName}`,
+    p1: `Welcome to the fastest growing <strong>online vape store serving ${areaName}</strong>. At VAPEHYD, we have revolutionized how you buy vapes locally. No more waiting days for courier shipping. We treat every order from ${areaName} with prime priority.`,
+    p2: `From the latest high-puff disposable devices to premium nicotine salts, our selection is unmatched. We guarantee 100% authentic products equipped with manufacturer verification codes, delivered to any address in ${areaName} in record time.`
+  }
+];
+
+const content = templates[index % templates.length];
+
+// DYNAMIC SEO TAGS
+const title = `Vape Shop ${areaName} | 30-Min Quick Vape Delivery in ${areaName}`;
+const description = `Looking for the best vape store in ${areaName}? Buy 100% authentic disposable vapes, pods, and e-liquids. Enjoy lightning-fast 30-minute delivery in ${areaName}.`;
+
+// DYNAMIC FAQs FOR LOCAL SEO
+const localFaqs = [
+  { q: `Do you offer fast vape delivery to ${areaName}?`, a: `Yes! We provide hyper-local express delivery to all locations within ${areaName}. Most orders are delivered within 30 to 45 minutes.` },
+  { q: `Where is the best vape shop near ${areaName}?`, a: `VAPEHYD operates as the premier online vape shop for ${areaName}. Instead of traveling to a physical store, you can order online and get genuine products delivered instantly.` },
+  { q: `Can I pay via Cash on Delivery in ${areaName}?`, a: `Absolutely. We offer Cash on Delivery (COD) as well as UPI on delivery for all our customers residing in ${areaName}.` },
+  { q: `Are the vapes sold in ${areaName} authentic?`, a: `We guarantee 100% authenticity on every product. Whether you order in ${areaName} or any other part of Hyderabad, your product will come with a verifiable scratch code.` }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": localFaqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.a }
+  }))
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
+  <div class="location-wrapper">
+    
+    <!-- Local SEO Breadcrumbs -->
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+      <a href="/">Home</a> <span class="separator">›</span>
+      <a href="/shop">Shop</a> <span class="separator">›</span>
+      <span class="current-page">Delivery to {areaName}</span>
+    </nav>
+
+    <!-- 🔥 PREMIUM LOCAL HERO BANNER (Radar Design) -->
+    <section class="premium-local-hero">
+      <div class="hero-bg-glow"></div>
+      
+      <div class="hero-content">
+        <!-- Live Dispatch UI Indicator -->
+        <div class="live-status-pill">
+          <span class="radar-dot"></span>
+          <span class="status-text">Live Dispatching to {areaName}</span>
+        </div>
+
+        <h1 class="page-title">Vape Delivery in <br/><span class="highlight">{areaName}</span></h1>
+        <p class="page-subtitle">Skip the traffic. Order premium authentic vapes online and get them delivered to your door in 30 minutes.</p>
+        
+        <div class="hero-trust-row">
+          <span class="t-badge"><span class="icon">⚡</span> 30-Min Fast</span>
+          <span class="t-badge"><span class="icon">💯</span> 100% Authentic</span>
+          <span class="t-badge"><span class="icon">💵</span> COD Available</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🔥 DYNAMIC LOCAL PRODUCTS -->
+    <section id="local-shop" class="local-products">
+      <div class="section-header">
+        <h2 class="section-heading">Trending near {areaName}</h2>
+      </div>
+      <div class="grid-container">
+        {localProducts.map((p) => (
+          <ProductCard product={p} />
+        ))}
+      </div>
+    </section>
+
+    <!-- 🔥 PREMIUM GLASSMORPHISM SEO CONTENT BLOCK -->
+    <section class="premium-seo-section">
+      <div class="glass-card">
+        <article class="seo-content-body">
+          <h2 class="seo-main-heading">{content.h2}</h2>
+          <div class="seo-text-block">
+            <p set:html={content.p1}></p>
+            <p set:html={content.p2}></p>
+          </div>
+          
+          <div class="divider"></div>
+
+          <!-- LOCAL FAQs -->
+          <div class="seo-text-block faq-block">
+            <h3>Frequently Asked Questions - {areaName}</h3>
+            <div class="accordion-wrapper">
+              {localFaqs.map((faq) => (
+                <div class="faq-item">
+                  <button class="faq-question">
+                    {faq.q} 
+                    <span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                  </button>
+                  <div class="faq-answer"><p>{faq.a}</p></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 🔥 PREMIUM INTERLINKING CHIPS (SEO Link Juice) -->
+    <section class="interlinking-section">
+      <div class="interlink-header">
+        <h3>📍 We also deliver to nearby areas:</h3>
+      </div>
+      <div class="area-tags">
+        {otherAreas.map(area => {
+          const slug = area.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+          return (
+            <a href={`/location/${slug}`} class="area-link">
+              {area}
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .location-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 16px 60px; font-family: system-ui, -apple-system, sans-serif; }
+  @media (min-width: 768px) { .location-wrapper { padding: 0 24px 80px; } }
+
+  .breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 16px 0 24px; font-size: 0.85rem; color: #888; font-weight: 600; }
+  .breadcrumbs a { color: #ff3e6c; text-decoration: none; }
+  .current-page { color: #fff; }
+
+  /* --- 🔥 PREMIUM HERO BANNER --- */
+  .premium-local-hero { 
+    position: relative; padding: 60px 20px; border-radius: 30px; margin-bottom: 50px;
+    background: linear-gradient(145deg, #160a10 0%, #050505 100%);
+    border: 1px solid rgba(255, 62, 108, 0.15); text-align: center; overflow: hidden;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.3);
+  }
+  @media (min-width: 768px) { .premium-local-hero { padding: 80px 40px; } }
+  
+  .hero-bg-glow {
+    position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
+    width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 62, 108, 0.15) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(50px); z-index: 0; pointer-events: none;
+  }
+  
+  .hero-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+  
+  /* Live Status Radar UI */
+  .live-status-pill {
+    background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.3);
+    padding: 8px 16px; border-radius: 30px; display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 24px; box-shadow: 0 0 15px rgba(37, 211, 102, 0.1);
+  }
+  .radar-dot { width: 10px; height: 10px; background-color: #25D366; border-radius: 50%; box-shadow: 0 0 10px #25D366; animation: radarPulse 1.5s infinite; }
+  @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+  .status-text { color: #25D366; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+  .page-title { font-size: 2.5rem; color: #fff; margin: 0 0 16px; font-weight: 900; line-height: 1.1; letter-spacing: -1px; }
+  @media (min-width: 768px) { .page-title { font-size: 4rem; } }
+  .highlight { color: #ff3e6c; text-shadow: 0 0 20px rgba(255, 62, 108, 0.4); }
+  
+  .page-subtitle { color: #aaa; font-size: 1.05rem; max-width: 600px; line-height: 1.6; margin-bottom: 30px; }
+  
+  .hero-trust-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .t-badge { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; color: #ddd; backdrop-filter: blur(5px); }
+
+  /* PRODUCTS */
+  .section-header { margin-bottom: 24px; text-align: left; }
+  .section-heading { font-size: 1.6rem; color: #fff; margin: 0; font-weight: 800; display: inline-block; position: relative; }
+  .section-heading::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 40px; height: 3px; background: #ff3e6c; border-radius: 2px; }
+  
+  .local-products { margin-bottom: 60px; }
+  .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 768px) { .grid-container { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+
+  /* --- 🔥 PREMIUM SEO GLASS CARD --- */
+  .premium-seo-section { margin-bottom: 50px; }
+  .glass-card { 
+    background: linear-gradient(180deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
+    border: 1px solid rgba(255,255,255,0.05); padding: 40px 24px; border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(20px);
+  }
+  @media (min-width: 768px) { .glass-card { padding: 50px 40px; } }
+  
+  .seo-main-heading { font-size: 1.8rem; color: #fff; margin: 0 0 20px; font-weight: 800; }
+  .seo-text-block p { color: #aaa; font-size: 1rem; line-height: 1.8; margin-bottom: 16px; }
+  .seo-text-block p :global(strong) { color: #fff; }
+  .divider { height: 1px; background: rgba(255,255,255,0.05); margin: 40px 0; }
+
+  /* FAQS */
+  .faq-block h3 { color: #fff; font-size: 1.4rem; margin-bottom: 20px; font-weight: 800; }
+  .accordion-wrapper { display: flex; flex-direction: column; gap: 12px; }
+  .faq-item { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; transition: all 0.3s; }
+  .faq-item:hover { border-color: rgba(255, 62, 108, 0.2); }
+  .faq-question { width: 100%; background: none; border: none; padding: 18px 20px; color: #fff; font-size: 0.95rem; font-weight: 700; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; line-height: 1.4; }
+  .faq-question .icon { transition: transform 0.3s; color: #ff3e6c; flex-shrink: 0; }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 20px; }
+  .faq-answer p { margin: 0 0 18px; font-size: 0.95rem; line-height: 1.6; color: #888; }
+  .faq-item.active { background: rgba(255, 62, 108, 0.05); border-color: rgba(255, 62, 108, 0.3); }
+  .faq-item.active .faq-answer { max-height: 300px; }
+  .faq-item.active .faq-question .icon { transform: rotate(180deg); }
+
+  /* --- 🔥 INTERLINKING CHIPS --- */
+  .interlinking-section { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+  .interlink-header h3 { color: #fff; font-size: 1.2rem; margin-bottom: 20px; font-weight: 800; }
+  .area-tags { display: flex; flex-wrap: wrap; gap: 12px; }
+  .area-link { 
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); 
+    color: #ccc; padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; 
+    font-weight: 600; text-decoration: none; transition: all 0.2s; 
+  }
+  .area-link:hover { background: rgba(255, 62, 108, 0.15); border-color: #ff3e6c; color: #fff; transform: translateY(-2px); }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // FAQ Accordion Logic
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        if(item) item.classList.toggle('active');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,209 @@
+---
+// src/components/MobileBottomNav.astro
+import { siteConfig } from '../config/site.js';
+
+const currentPath = Astro.url.pathname;
+const waMessage = encodeURIComponent(`Hi ${siteConfig.name}, I need help with some premium vapes.`);
+const waLink = `https://wa.me/${siteConfig.whatsappNumber}?text=${waMessage}`;
+---
+
+<!-- Floating Pill Wrapper -->
+<div class="mobile-nav-wrapper">
+  <nav class="premium-floating-pill">
+    
+    <!-- Home -->
+    <a href="/" class={`nav-item ${currentPath === '/' ? 'active' : ''}`}>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Home</span>
+    </a>
+
+    <!-- Shop (Storefront Bag) -->
+    <a href="/shop" class={`nav-item ${currentPath.includes('/shop') ? 'active' : ''}`}>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span>Shop</span>
+    </a>
+
+    <!-- Offers (Premium Tag Icon) -->
+    <a href="/offers" class={`nav-item ${currentPath.includes('/offers') ? 'active' : ''}`}>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+      </svg>
+      <span>Offers</span>
+    </a>
+
+    <!-- Cart (Trolley with Badge) -->
+    <a href="/cart" class={`nav-item ${currentPath.includes('/cart') ? 'active' : ''}`}>
+      <div class="cart-icon-wrapper">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span id="bottom-cart-badge" class="bottom-badge" style="display:none;">0</span>
+      </div>
+      <span>Cart</span>
+    </a>
+
+    <!-- WhatsApp Support (Chat Bubble) -->
+    <a href={waLink} target="_blank" rel="noopener noreferrer" class="nav-item whatsapp-item">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+      </svg>
+      <span>Chat</span>
+    </a>
+
+  </nav>
+</div>
+
+<style>
+  /* --- Floating Pill Container --- */
+  .mobile-nav-wrapper {
+    position: fixed;
+    bottom: 16px; /* Bottom se gap (Floating effect) */
+    left: 16px;   /* Side se gap */
+    right: 16px;  /* Side se gap */
+    z-index: 1000;
+    display: none; /* Hide on desktop */
+    pointer-events: none; /* Allows clicking through the empty space around the pill */
+  }
+
+  /* Sirf Mobile/Tablet par display karein */
+  @media (max-width: 768px) {
+    .mobile-nav-wrapper {
+      display: block;
+      animation: slideUpFloat 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  }
+
+  @keyframes slideUpFloat {
+    from { transform: translateY(150%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* --- Premium Glassmorphism Pill --- */
+  .premium-floating-pill {
+    background: rgba(20, 20, 20, 0.85); /* Deep dark glass */
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.12); /* Subtle edge glow */
+    border-radius: 30px; /* Fully rounded pill shape */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 65px;
+    padding: 0 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+    pointer-events: auto; /* Re-enable clicking for the nav itself */
+  }
+
+  /* --- Nav Items & Sharp SVG Styling --- */
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: #777; /* Subtle unselected color */
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-weight: 600;
+    font-family: system-ui, -apple-system, sans-serif;
+    flex: 1; /* Equal spacing */
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    border-radius: 20px;
+  }
+
+  /* Active State (Neon Pink Glow) */
+  .nav-item.active {
+    color: #ff3e6c;
+  }
+  
+  /* Icon interaction */
+  .nav-item svg {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .nav-item.active svg {
+    filter: drop-shadow(0 0 6px rgba(255, 62, 108, 0.5));
+    transform: translateY(-2px) scale(1.05);
+  }
+
+  /* Active Glow Dot below text */
+  .nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    width: 4px;
+    height: 4px;
+    background: #ff3e6c;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+  }
+  .nav-item.active::after {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 8px #ff3e6c;
+  }
+
+  /* Hover & Tap Effect */
+  .nav-item:active svg { transform: scale(0.85); }
+
+  /* WhatsApp Specific Styling */
+  .whatsapp-item.active { color: #25D366; }
+  .whatsapp-item.active svg { filter: drop-shadow(0 0 6px rgba(37, 211, 102, 0.5)); }
+  .whatsapp-item.active::after { background: #25D366; box-shadow: 0 0 8px #25D366; }
+
+  /* Cart Badge Styling */
+  .cart-icon-wrapper { position: relative; display: flex; }
+  .bottom-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #ff3e6c;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 800;
+    height: 16px;
+    min-width: 16px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    border: 2px solid #141414; /* Matches the nav background for a clean cutout */
+  }
+</style>
+
+<script>
+  // Same logic to sync the cart badge instantly
+  function updateBottomCartBadge() {
+    const cart = JSON.parse(localStorage.getItem('vapeCart')) || [];
+    let totalCount = 0;
+    cart.forEach(item => totalCount += item.quantity);
+    
+    const badge = document.getElementById('bottom-cart-badge');
+    if (badge) {
+      badge.innerText = totalCount;
+      badge.style.display = totalCount > 0 ? 'flex' : 'none';
+      
+      if (totalCount > 0) {
+        badge.style.transform = 'scale(1.2)';
+        setTimeout(() => badge.style.transform = 'scale(1)', 200);
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', updateBottomCartBadge);
+  window.addEventListener('cartUpdated', updateBottomCartBadge);
+</script>

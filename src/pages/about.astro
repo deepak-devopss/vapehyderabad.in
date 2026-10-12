@@ -1,0 +1,109 @@
+---
+// src/pages/about.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site.js';
+
+const title = "About VAPEHYD | Hyderabad's Premium Vape Store";
+const description = "Learn about VAPEHYD, Hyderabad's most trusted online vape store. We guarantee 100% authentic vapes with 30-minute lightning-fast delivery.";
+
+// SEO AboutPage Schema
+const aboutSchema = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About VAPEHYD",
+  "description": description,
+  "url": `${siteConfig.url}/about`,
+  "publisher": {
+    "@type": "Organization",
+    "name": "VAPEHYD",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteConfig.url}/logo.png`
+    }
+  }
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <script type="application/ld+json" set:html={JSON.stringify(aboutSchema)}></script>
+
+  <div class="about-wrapper">
+    <!-- Hero Section -->
+    <section class="about-hero">
+      <div class="hero-glow"></div>
+      <h1 class="page-title">Redefining Vaping in <span class="highlight">Hyderabad</span></h1>
+      <p class="hero-subtitle">We are not just a store; we are Hyderabad's hyper-local dispatch center for 100% authentic, premium vaping hardware and e-liquids.</p>
+    </section>
+
+    <!-- Content Grid -->
+    <section class="about-content">
+      
+      <div class="story-block glass-card">
+        <h2>Our Story</h2>
+        <p>VAPEHYD was born out of a simple frustration: the lack of reliable, fast, and authentic vape suppliers in Hyderabad. The market was flooded with fake clones and delivery times took days. We decided to change the game entirely.</p>
+        <p>Today, we stand as the most trusted <strong>online vape store in Hyderabad</strong>, partnering directly with master distributors of global brands like Elfbar, IGET, and Uwell to bring you untouched, verified products directly to your door.</p>
+      </div>
+
+      <div class="vision-grid">
+        <div class="vision-card glass-card">
+          <div class="icon-box">⚡</div>
+          <h3>The 30-Minute Revolution</h3>
+          <p>We pioneered the 30-minute hyper-local delivery model in Hyderabad. If you are in the city, you don't wait for days. Our dedicated dispatchers ensure your order reaches you while it's still fresh on your mind.</p>
+        </div>
+        <div class="vision-card glass-card">
+          <div class="icon-box">🛡️</div>
+          <h3>Zero-Tolerance for Clones</h3>
+          <p>Authenticity is our religion. Every single product we stock features an original manufacturer scratch-code. We believe that your safety and flavor experience should never be compromised by cheap knock-offs.</p>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Areas Covered in HYD</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">10k+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Authentic Guarantee</span>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-wrapper { max-width: 1000px; margin: 0 auto; padding: 40px 16px 80px; font-family: system-ui, -apple-system, sans-serif; }
+  
+  .about-hero { text-align: center; padding: 60px 0; position: relative; margin-bottom: 40px; }
+  .hero-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(255, 62, 108, 0.2) 0%, rgba(0,0,0,0) 70%); filter: blur(40px); z-index: 0; pointer-events: none; }
+  .page-title { font-size: 2.5rem; color: #fff; margin: 0 0 20px; font-weight: 900; position: relative; z-index: 1; line-height: 1.2; }
+  @media (min-width: 768px) { .page-title { font-size: 4rem; } }
+  .highlight { color: #ff3e6c; text-shadow: 0 0 20px rgba(255,62,108,0.4); }
+  .hero-subtitle { color: #aaa; font-size: 1.1rem; max-width: 700px; margin: 0 auto; line-height: 1.6; position: relative; z-index: 1; }
+
+  .glass-card { background: linear-gradient(145deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%); border: 1px solid rgba(255,255,255,0.05); padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+  
+  .story-block { margin-bottom: 30px; }
+  .story-block h2 { color: #fff; font-size: 2rem; margin: 0 0 20px; font-weight: 800; }
+  .story-block p { color: #aaa; font-size: 1.05rem; line-height: 1.8; margin-bottom: 16px; }
+  .story-block strong { color: #eee; }
+
+  .vision-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 50px; }
+  @media (min-width: 768px) { .vision-grid { grid-template-columns: 1fr 1fr; } }
+  .vision-card { text-align: center; padding: 40px 30px; transition: transform 0.3s; }
+  .vision-card:hover { transform: translateY(-5px); border-color: rgba(255, 62, 108, 0.2); }
+  .icon-box { font-size: 3rem; margin-bottom: 20px; display: inline-block; }
+  .vision-card h3 { color: #fff; font-size: 1.4rem; margin: 0 0 16px; font-weight: 800; }
+  .vision-card p { color: #888; font-size: 0.95rem; line-height: 1.6; margin: 0; }
+
+  .stats-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; background: #111; padding: 40px 20px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.03); }
+  @media (min-width: 768px) { .stats-row { justify-content: space-around; } }
+  .stat-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .stat-number { font-size: 3rem; color: #ff3e6c; font-weight: 900; line-height: 1; margin-bottom: 8px; text-shadow: 0 0 15px rgba(255,62,108,0.3); }
+  .stat-label { color: #888; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+</style>

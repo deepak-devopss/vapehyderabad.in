@@ -1,5 +1,12 @@
-// @ts-check
+// astro.config.mjs
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  // Yahan apna final GoDaddy wala domain daaliye
+  site: 'https://vapehyderabad.in', 
+  
+  integrations: [
+    sitemap()
+  ],
+});

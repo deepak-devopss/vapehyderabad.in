@@ -1,0 +1,99 @@
+---
+// src/components/LocalAreas.astro
+
+const hyderabadAreas = [
+  "Banjara Hills", "Jubilee Hills", "Hitech City", "Madhapur", "Gachibowli", 
+  "Kondapur", "Kukatpally", "Miyapur", "Ameerpet", "Begumpet", "Secunderabad", 
+  "Somajiguda", "Manikonda", "Tolichowki", "Dilsukhnagar", "LB Nagar", "Uppal", 
+  "Tarnaka", "Malkajgiri", "Mehdipatnam", "Attapur", "Shamshabad", "KPHB Colony", 
+  "Pragathi Nagar", "Nizampet", "Bachupally", "Hafeezpet", "Chandanagar", 
+  "Lingampally", "Tellapur", "Nanakramguda", "Financial District", "Kokapet", 
+  "Gandipet", "Puppalaguda", "Khairatabad", "Lakdikapul", "Abids", "Koti", 
+  "Himayatnagar", "Narayanguda", "Basheerbagh", "Chikkadpally", "Musheerabad", 
+  "Alwal", "Bowenpally", "Sanath Nagar", "Balanagar", "Jeedimetla", "Kompally", 
+  "Bolarum", "ECIL", "AS Rao Nagar", "Neredmet"
+];
+---
+
+<section id="locations-section" class="local-areas-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Shop By Area in Hyderabad 📍</h2>
+      <p>Select your location for exclusive 30-minute hyper-local delivery.</p>
+    </div>
+    
+    <div class="areas-chip-grid">
+      {hyderabadAreas.map((area) => {
+        const slug = area.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        return (
+          <a href={`/location/${slug}`} class="area-chip">
+            {area}
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .local-areas-section {
+    padding: 60px 16px;
+    background: #0a0a0a;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .section-header h2 {
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0 0 10px;
+  }
+  
+  @media (min-width: 768px) {
+    .section-header h2 { font-size: 2.2rem; }
+  }
+
+  .section-header p {
+    color: #aaa;
+    font-size: 0.95rem;
+  }
+
+  /* Compact Chips Layout for 50+ Cities */
+  .areas-chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .area-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .area-chip:hover {
+    background: rgba(255, 62, 108, 0.15);
+    border-color: #ff3e6c;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 62, 108, 0.2);
+  }
+</style>

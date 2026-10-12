@@ -1,0 +1,259 @@
+---
+// src/pages/category/[category].astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import products from '../../data/products.json';
+
+// 1. DYNAMIC PATH GENERATION
+export async function getStaticPaths() {
+  const uniqueCategories = [...new Set(products.map(p => p.category))].filter(Boolean);
+  
+  return uniqueCategories.map((category) => {
+    const slug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const filteredProducts = products.filter(p => p.category === category);
+    return { params: { category: slug }, props: { categoryName: category, categoryProducts: filteredProducts } };
+  });
+}
+
+const { category } = Astro.params;
+const { categoryName, categoryProducts } = Astro.props;
+
+// 2. ADVANCED SEO CONTENT DICTIONARY (Long-Form & 5+ FAQs)
+const categorySEOData = {
+  "disposable": {
+    topIntro: `Are you searching for the best <strong>disposable vapes in Hyderabad</strong>? Your search ends at VAPEHYD, the most trusted <strong>online vape store in Hyderabad</strong>. We bring you an elite collection of authentic disposable vape pens from top global brands, ensuring premium flavors and smooth nicotine delivery with our blazing fast 30-minute local delivery.`,
+    intro: `Looking for reliable, long-lasting disposable vapes? Disposables offer the ultimate convenience for both beginners and seasoned vapers. No charging, no refilling—just unbox and puff.`,
+    sections: [
+      { id: "evolution", title: "The Evolution of Disposable Vaping in Hyderabad", content: "Over the past few years, the vaping landscape has shifted dramatically. The demand for <strong>disposable vapes in Hyderabad</strong> has skyrocketed due to their sheer convenience. Gone are the days of carrying bulky mods, messy e-liquid bottles, and spare batteries. Today’s disposable devices pack advanced mesh coil technology and high-capacity batteries into a sleek, pocket-friendly design. At VAPEHYD, we have curated a selection that represents the pinnacle of this evolution, offering devices that deliver consistent flavor from the very first puff to the last." },
+      { id: "puff-count", title: "How to Choose the Right Puff Count (3000 vs 5000 vs 10000+)", content: "One of the most common questions from our customers is which puff count to choose. If you are a casual vaper or someone looking for a weekend companion, a 3000-puff device like the standard Elfbar or IGET might be perfect. It is compact and budget-friendly. However, if you are a daily user, upgrading to a 5000 or even a 10000+ puff device is far more economical. These higher puff-count vapes often come with a Type-C rechargeable port. This ensures that you can utilize every single drop of the premium e-liquid inside without worrying about the battery dying prematurely. VAPEHYD offers detailed product descriptions to help you make this choice seamlessly." },
+      { id: "flavors-nicotine", title: "Understanding Nicotine Strengths and Flavor Profiles", content: "The beauty of buying an <strong>online vape in Hyderabad</strong> from VAPEHYD is the staggering variety of options. Disposables typically use nicotine salts (nic salts), which provide a much smoother throat hit compared to traditional freebase nicotine, even at higher strengths like 20mg or 50mg. When it comes to flavors, the industry has perfected complex blends. From icy fruit concoctions like Mango Ice and Watermelon Bubblegum to rich, robust profiles like Cuban Tobacco and Vanilla Custard, there is a flavor for every palate. Our team tests every flavor profile to ensure it meets our strict quality standards before listing it on the site." },
+      { id: "authenticity", title: "Why Authenticity Matters: Beware of Fake Vapes", content: "The surge in popularity of disposable vapes has unfortunately led to a massive influx of counterfeit products in the market. Using fake vapes is not just a waste of money—it can be a serious health hazard due to unregulated e-liquids and poor battery construction. As a premier <strong>vape shop in Hyderabad</strong>, VAPEHYD has a zero-tolerance policy for clones. Every single disposable device we sell—be it Elfbar, Uwell, or Vgod—is sourced directly from authorized master distributors. Furthermore, every product comes with a unique anti-counterfeit QR code or scratch-off sticker, allowing you to verify its authenticity directly on the manufacturer's official website." },
+      { id: "delivery-promise", title: "VAPEHYD's 30-Minute Delivery Promise", content: "We understand that when you need a vape, you need it fast. Waiting 3-4 days for standard shipping is a thing of the past. VAPEHYD has revolutionized the local vape market with our lightning-fast hyperlocal delivery network. If you are ordering within Hyderabad city limits, our dedicated dispatch team ensures your disposable vape reaches your doorstep in just 30 to 45 minutes. It is discreet, fast, and highly reliable. Just browse our collection, place your order, and experience the best vape delivery service in the city." }
+    ],
+    faqs: [
+      { q: "How long does a 5000 puff disposable vape actually last?", a: "It depends entirely on your usage habits. For a moderate vaper, a 5000-puff device typically lasts between 7 to 12 days. Heavy users might finish it in 5 days, while occasional users can make it last over two weeks." },
+      { q: "Can I recharge my disposable vape?", a: "Yes, many modern high-puff disposables (usually 4000 puffs and above) feature a Type-C charging port at the bottom. This allows you to recharge the battery to ensure you can finish all the e-liquid. However, they cannot be refilled with new liquid." },
+      { q: "How do I know if the disposable vape I bought is authentic?", a: "Every genuine disposable vape sold at VAPEHYD comes with a verification sticker or QR code on the packaging. You can scratch off the coating to reveal a security code and enter it on the brand's official verification portal to confirm its authenticity." },
+      { q: "What nicotine strength is best for a beginner?", a: "For a beginner transitioning from smoking, a 20mg (2%) nicotine salt disposable is generally recommended. It provides a satisfying and smooth throat hit without being overwhelmingly harsh. Heavy smokers might prefer a 50mg (5%) variant." },
+      { q: "What is your delivery time for disposable vapes in Hyderabad?", a: "We offer express hyperlocal delivery across Hyderabad. Once your order is confirmed, our dispatch team ensures it reaches your location within 30 to 45 minutes." }
+    ]
+  },
+  // Default fallback covering 600+ words and 5 FAQs dynamically
+  "default": {
+    topIntro: `Welcome to the ultimate destination to buy premium <strong>${categoryName} in Hyderabad</strong>. At VAPEHYD, your trusted <strong>vape store in Hyderabad</strong>, we offer a massive, authentic collection of ${categoryName.toLowerCase()} paired with industry-leading 30-minute delivery.`,
+    intro: `Discover the best quality ${categoryName} curated just for you. Whether you are a cloud chaser or a flavor enthusiast, our premium collection guarantees satisfaction.`,
+    sections: [
+      { id: "introduction", title: `The Ultimate Guide to ${categoryName}`, content: `The vaping industry has seen incredible innovations, and finding the right <strong>${categoryName.toLowerCase()} in Hyderabad</strong> has never been easier thanks to VAPEHYD. We understand that our customers are looking for superior build quality, consistent performance, and unmatched flavor delivery. That is why our selection of ${categoryName.toLowerCase()} goes through a rigorous quality assurance process. We test for durability, vapor production, and user experience, ensuring that when you purchase from us, you are investing in the absolute best the market has to offer. Whether you are an absolute beginner taking your first step away from traditional combustible tobacco or a seasoned veteran looking for the latest tech upgrade, our comprehensive collection caters to every specific need.` },
+      { id: "benefits", title: `Key Benefits of Upgrading Your ${categoryName}`, content: `Upgrading to a premium ${categoryName.toLowerCase()} completely transforms your vaping sessions. High-end devices and accessories utilize cutting-edge mesh coil technology, which provides a larger surface area for heating the e-liquid. This results in incredibly dense flavor profiles and massive vapor production without the dreaded burnt taste. Furthermore, advanced airflow control systems allow you to customize your draw—from a tight Mouth-To-Lung (MTL) hit that mimics a traditional cigarette to a loose Direct-To-Lung (DTL) draw for massive clouds. By shopping at the best <strong>online vape store in Hyderabad</strong>, you guarantee access to these state-of-the-art features.` },
+      { id: "maintenance", title: "Maintenance and Longevity Tips", content: `To get the most out of your ${categoryName.toLowerCase()}, proper maintenance is key. Always ensure that you store your products in a cool, dry place away from direct sunlight, as extreme heat can degrade the e-liquid and damage the battery cells. If you are using devices with refillable pods or replaceable coils, make sure to prime your coils properly before the first use by letting the e-liquid saturate the cotton for at least 10 minutes. This simple step prevents dry hits and significantly extends the lifespan of your coil. Regular cleaning of the contacts with a dry cotton swab also ensures optimal power delivery.` },
+      { id: "authenticity", title: "Say No to Clones: The Importance of Authenticity", content: `The Indian vape market is unfortunately flooded with cheap knock-offs and clones that promise the world but deliver a subpar and potentially dangerous experience. VAPEHYD stands as a fortress of authenticity. We are the most trusted <strong>vape shop in Hyderabad</strong> because we absolutely refuse to stock unverified products. Counterfeit ${categoryName.toLowerCase()} often contain mystery e-liquids mixed in unsanitary conditions and utilize poor-quality batteries that can fail catastrophically. We source our inventory strictly from official brands and master distributors. Your safety and satisfaction are our absolute highest priorities.` },
+      { id: "why-vapehyd", title: "Why Buy from VAPEHYD?", content: `Why should you choose VAPEHYD for your ${categoryName.toLowerCase()} needs? The answer is simple: unparalleled service and speed. We know exactly what vapers want. Our platform is designed to be highly intuitive, offering detailed product descriptions and high-resolution images. But our true superpower is our delivery network. We offer an exclusive 30-minute express delivery service across Hyderabad. No more waiting anxiously for courier tracking updates. You order, we dispatch, and you vape—all within the hour. Join thousands of satisfied customers who have made us their go-to vaping destination.` }
+    ],
+    faqs: [
+      { q: `What makes your ${categoryName} collection the best in Hyderabad?`, a: `Our collection is handpicked by vaping experts. We only stock products that have proven track records for safety, flavor delivery, and overall build quality. Every single item is 100% authentic and verified.` },
+      { q: `How fast can I get ${categoryName} delivered to my address?`, a: `If your delivery address is within Hyderabad city limits, you can take advantage of our hyper-local delivery network. We guarantee delivery within 30 to 45 minutes of order confirmation.` },
+      { q: `Do you provide customer support for setting up my ${categoryName}?`, a: `Absolutely! We pride ourselves on excellent customer service. You can reach out to our team via WhatsApp for any queries regarding device setup, coil priming, or troubleshooting.` },
+      { q: `How do I verify the authenticity of the ${categoryName} I purchased?`, a: `Every authentic product we sell features a brand-specific security code hidden under a scratch-off panel on the box. You can enter this code on the manufacturer's official website to verify your purchase.` },
+      { q: `Are there any warranties on ${categoryName} products?`, a: `While disposable items generally do not carry warranties due to their nature, hardware items like pod systems do come with manufacturer warranties against dead-on-arrival (DOA) defects. Please check our return policy page for detailed terms.` }
+    ]
+  }
+};
+
+// Check if category exists in our SEO dictionary, else use default
+const seoContent = categorySEOData[category] || categorySEOData["default"];
+
+// SEO Meta Data
+const title = `Buy ${categoryName} in Hyderabad | Top Vape Store`;
+const description = `Shop authentic ${categoryName} online in Hyderabad. Get 30-minute fast delivery at VAPEHYD, the ultimate destination for premium vapes.`;
+
+// 3. GENERATE GOOGLE JSON-LD SCHEMA FOR FAQs
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": seoContent.faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": { "@type": "Answer", "text": faq.a }
+  }))
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- FAQ Schema for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+
+  <div class="category-wrapper">
+    
+    <!-- SEO Breadcrumbs -->
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+      <a href="/">Home</a> <span class="separator">›</span>
+      <a href="/shop">Shop</a> <span class="separator">›</span>
+      <span class="current-page">{categoryName}</span>
+    </nav>
+
+    <!-- NEW: TOP KEYWORD-RICH SEO INTRO -->
+    <section class="seo-top-intro">
+      <p set:html={seoContent.topIntro}></p>
+    </section>
+
+    <!-- Header Banner -->
+    <section class="category-header-banner">
+      <div class="banner-content">
+        <h1 class="page-title">{categoryName} <span class="highlight">in Hyderabad</span></h1>
+        <div class="category-stats">
+          <span class="stat-badge">🔥 {categoryProducts.length} Premium Items</span>
+          <span class="stat-badge">⚡ 30-Min Delivery</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Grid -->
+    <main class="category-main">
+      <div class="grid-container">
+        {categoryProducts.map((product) => (
+          <ProductCard product={product} />
+        ))}
+      </div>
+    </main>
+
+    <!-- 🔥 600+ WORD ADVANCED SEO CONTENT BLOCK (TOC + Body + 5 FAQs) -->
+    <section class="master-seo-section">
+      <div class="seo-layout">
+        
+        <!-- Table of Contents (Sticky on Desktop) -->
+        <aside class="seo-toc">
+          <div class="toc-sticky-box">
+            <h3 class="toc-title">Guide Contents</h3>
+            <ul class="toc-list">
+              {seoContent.sections.map((section) => (
+                <li><a href={`#${section.id}`}>{section.title}</a></li>
+              ))}
+              <li><a href="#faqs">Frequently Asked Questions (5)</a></li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- Long Form Content Body (600+ Words) -->
+        <article class="seo-content-body">
+          <h2 class="seo-main-heading">Comprehensive Guide to {categoryName}</h2>
+          
+          {seoContent.sections.map((section) => (
+            <div id={section.id} class="seo-text-block">
+              <h3>{section.title}</h3>
+              <p set:html={section.content}></p>
+            </div>
+          ))}
+
+          <!-- Dedicated FAQ Section (5 FAQs minimum) -->
+          <div id="faqs" class="seo-text-block faq-block">
+            <h3>Top 5 FAQs about {categoryName}</h3>
+            <div class="accordion-wrapper">
+              {seoContent.faqs.map((faq) => (
+                <div class="faq-item">
+                  <button class="faq-question">
+                    {faq.q} 
+                    <span class="icon">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </span>
+                  </button>
+                  <div class="faq-answer"><p>{faq.a}</p></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .category-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 12px 60px; font-family: system-ui, -apple-system, sans-serif; }
+  @media (min-width: 768px) { .category-wrapper { padding: 0 24px 80px; } }
+
+  .breadcrumbs { display: flex; align-items: center; gap: 8px; padding: 16px 0 8px; font-size: 0.85rem; color: #888; font-weight: 600; }
+  .breadcrumbs a { color: #ff3e6c; text-decoration: none; }
+  .current-page { color: #fff; }
+
+  /* TOP SEO INTRO */
+  .seo-top-intro { margin-bottom: 24px; }
+  .seo-top-intro p { font-size: 0.9rem; color: #aaa; line-height: 1.6; margin: 0; }
+  .seo-top-intro p :global(strong) { color: #fff; }
+  @media (min-width: 768px) { .seo-top-intro p { font-size: 1rem; } }
+
+  .category-header-banner { padding: 30px 20px; background: linear-gradient(135deg, rgba(255, 62, 108, 0.1) 0%, rgba(20,20,20,0.8) 100%); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px; text-align: center; }
+  @media (min-width: 768px) { .category-header-banner { padding: 50px 40px; text-align: left; border-radius: 24px; } }
+  
+  .page-title { font-size: 1.8rem; color: #fff; margin: 0 0 16px; font-weight: 800; text-transform: capitalize; }
+  @media (min-width: 768px) { .page-title { font-size: 3rem; } }
+  .highlight { color: #ff3e6c; }
+
+  .category-stats { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  @media (min-width: 768px) { .category-stats { justify-content: flex-start; } }
+  .stat-badge { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; color: #ddd; }
+
+  .category-main { margin-bottom: 60px; }
+  .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 768px) { .grid-container { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+  @media (min-width: 1200px) { .grid-container { grid-template-columns: repeat(4, 1fr); } }
+
+  /* --- MASTER SEO SECTION STYLES --- */
+  .master-seo-section { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px; }
+  .seo-layout { display: flex; flex-direction: column; gap: 40px; }
+  @media (min-width: 992px) { .seo-layout { flex-direction: row; align-items: flex-start; } }
+
+  /* TOC Sidebar */
+  .seo-toc { width: 100%; }
+  @media (min-width: 992px) { .seo-toc { width: 320px; flex-shrink: 0; position: sticky; top: 100px; } }
+  .toc-sticky-box { background: #111; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+  .toc-title { color: #fff; font-size: 1.1rem; margin: 0 0 16px; font-weight: 800; }
+  .toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .toc-list a { color: #888; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; display: block; padding-left: 10px; border-left: 2px solid transparent; }
+  .toc-list a:hover { color: #ff3e6c; border-left-color: #ff3e6c; }
+
+  /* Content Body */
+  .seo-content-body { flex: 1; min-width: 0; }
+  .seo-main-heading { font-size: 1.6rem; color: #fff; margin: 0 0 30px; font-weight: 800; }
+  @media (min-width: 768px) { .seo-main-heading { font-size: 2rem; } }
+  
+  .seo-text-block { margin-bottom: 40px; }
+  .seo-text-block h3 { color: #fff; font-size: 1.2rem; margin: 0 0 16px; font-weight: 700; }
+  .seo-text-block p { color: #aaa; font-size: 1rem; line-height: 1.8; margin: 0; }
+  .seo-text-block p :global(strong) { color: #eee; }
+  
+  /* FAQs */
+  .accordion-wrapper { display: flex; flex-direction: column; gap: 10px; }
+  .faq-item { background: #141414; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; }
+  .faq-question { width: 100%; background: none; border: none; padding: 16px 20px; color: #fff; font-size: 0.95rem; font-weight: 600; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; line-height: 1.4; }
+  .faq-question .icon { transition: transform 0.3s; color: #ff3e6c; flex-shrink: 0; margin-left: 10px; }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 20px; }
+  .faq-answer p { margin: 0 0 16px; font-size: 0.9rem; line-height: 1.6; color: #999; }
+  .faq-item.active .faq-answer { max-height: 500px; }
+  .faq-item.active .faq-question .icon { transform: rotate(180deg); }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Smooth scroll for TOC links
+    document.querySelectorAll('.toc-list a').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          window.scrollTo({ top: targetElement.offsetTop - 80, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // FAQ Accordion Logic
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        item.classList.toggle('active');
+      });
+    });
+  });
+</script>
