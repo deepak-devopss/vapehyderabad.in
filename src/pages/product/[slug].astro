@@ -19,7 +19,15 @@ const { product } = Astro.props;
 const categorySlug = product.category ? product.category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : 'uncategorized';
 
 // Flavors & Description Logic
-const flavorsArray = product.variants || [];
+let flavorsArray = [];
+if (product.variants) {
+  if (Array.isArray(product.variants)) {
+    flavorsArray = product.variants;
+  } else if (typeof product.variants === 'string') {
+    flavorsArray = product.variants.split(',').map(f => f.trim()).filter(Boolean);
+  }
+}
+
 const longDescription = product.long_description || product.short_description || '';
 
 // 🔥 RELATED PRODUCTS LOGIC: Same category ke max 4 products dikhayenge (Current product ko hata kar)
