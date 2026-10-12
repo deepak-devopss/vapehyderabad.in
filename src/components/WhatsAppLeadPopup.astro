@@ -135,56 +135,43 @@ const targetSheetName = "VapeHyderabad Leads";
     
     let targetWaLink = "";
     let extractedData = {};
-
-    // 🔥 DYNAMIC ORIGIN FOR ANIMATION
     let originX = window.innerWidth / 2;
     let originY = window.innerHeight / 2;
 
     function triggerLeadPopup(url) {
       targetWaLink = url;
-      let urlObj;
-      try { urlObj = new URL(targetWaLink); } catch(err) { return; }
-      let messageBody = decodeURIComponent(urlObj.searchParams.get('text') || "");
+      try { 
+        let urlObj = new URL(targetWaLink); 
+        let messageBody = decodeURIComponent(urlObj.searchParams.get('text') || "");
+        extractedData = { productName: "General Inquiry", price: "N/A", productLink: window.location.href };
+        let pMatch = messageBody.match(/\*([^*]+)\*/); 
+        if(pMatch) extractedData.productName = pMatch[1].trim();
+        let prMatch = messageBody.match(/Price:\s*₹?\s*([0-9,.]+)/i); 
+        if(prMatch) extractedData.price = prMatch[1].trim();
+      } catch(err) {
+        extractedData = { productName: "General Inquiry", price: "N/A", productLink: window.location.href };
+      }
 
-      extractedData = { productName: "General Inquiry", price: "N/A", productLink: window.location.href };
-
-      // Astro Text Parser
-      let pMatch = messageBody.match(/\*([^*]+)\*/); 
-      if(pMatch) extractedData.productName = pMatch[1].trim();
-      let prMatch = messageBody.match(/Price:\s*₹?\s*([0-9,.]+)/i); 
-      if(prMatch) extractedData.price = prMatch[1].trim();
-
-      // SET TRANSFORM ORIGIN SO IT "GROWS" FROM THE CLICKED BUTTON
       popupBox.style.transformOrigin = `${originX}px ${originY}px`;
-
-      // Open Popup with classes
       overlay.classList.remove('wa-hidden');
-      // Tiny delay to ensure browser paints the origin before adding the scale(1) class
-      setTimeout(() => {
-        overlay.classList.add('wa-active');
-      }, 10);
+      setTimeout(() => { overlay.classList.add('wa-active'); }, 10);
       document.body.style.overflow = 'hidden'; 
     }
 
-    // 1. Intercept Standard <a> Clicks (Captures Mouse Coordinates!)
     document.addEventListener('click', function(e) {
       const waElement = e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
       if (waElement) {
         e.preventDefault(); 
-        // Get Exact Coordinates of the Button
         const rect = waElement.getBoundingClientRect();
         originX = rect.left + (rect.width / 2);
         originY = rect.top + (rect.height / 2);
-        
         triggerLeadPopup(waElement.getAttribute('href'));
       }
     });
 
-    // 2. The Monkey Patch (If triggered by JS window.open)
     const originalWindowOpen = window.open;
     window.open = function(url, target, features) {
       if (typeof url === 'string' && (url.includes('wa.me') || url.includes('api.whatsapp.com'))) {
-        // If from JS, we just pop it from center
         originX = window.innerWidth / 2; originY = window.innerHeight / 2;
         triggerLeadPopup(url);
         return null;
@@ -192,11 +179,8 @@ const targetSheetName = "VapeHyderabad Leads";
       return originalWindowOpen.call(window, url, target, features);
     };
 
-    // 3. Close Logic (Shrinks back to button)
     const closePopup = () => {
-      overlay.classList.remove('wa-active'); // Triggers shrink animation
-      
-      // Wait for CSS animation to finish before fully hiding
+      overlay.classList.remove('wa-active'); 
       setTimeout(() => {
         overlay.classList.add('wa-hidden');
         document.body.style.overflow = '';
@@ -205,22 +189,16 @@ const targetSheetName = "VapeHyderabad Leads";
         submitBtn.disabled = false;
       }, 350); 
     };
+    
     closeBtn.addEventListener('click', closePopup);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closePopup(); });
 
-    // 🔥 HELPER: MOBILE VS DESKTOP REDIRECT (Fixes Same Screen Issue)
+    // 🔥 FIX: 100% WORKING WHATSAPP REDIRECT (Bypasses Popup Blockers)
     const openWhatsAppDirectly = () => {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        // Direct App Deep-Link for phones
-        window.location.href = targetWaLink;
-      } else {
-        // Desktop browser tab
-        window.open(targetWaLink, '_blank');
-      }
+      // Ye exact device location change karega jisse App OS level par trigger hogi
+      window.location.assign(targetWaLink);
     };
 
-    // 4. Form Submission
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       const userName = document.getElementById('wa-user-name').value;
@@ -239,11 +217,11 @@ const targetSheetName = "VapeHyderabad Leads";
         method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
       })
       .then(() => {
-        openWhatsAppDirectly(); // 🔥 Fixed Redirect Logic
+        openWhatsAppDirectly(); 
         closePopup();
       })
       .catch(() => {
-        openWhatsAppDirectly(); // 🔥 Fixed Redirect Logic
+        openWhatsAppDirectly(); 
         closePopup();
       });
     });
