@@ -7,42 +7,49 @@ import Footer from '../components/Footer.astro';
 import WhatsAppLeadPopup from '../components/WhatsAppLeadPopup.astro';
 import MobileBottomNav from '../components/MobileBottomNav.astro';
 
-// Page se title aur description props receive kar rahe hain
-const { title, description } = Astro.props;
+// Page se title, description aur image props receive kar rahe hain
+const { title, description, image } = Astro.props;
 
-// Agar page specific title pass kiya hai, toh use dikhao warna default name
+// Canonical URL banana (Duplicate content error rokne ke liye)
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || siteConfig.url).toString();
+
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
+const ogImage = image ? new URL(image, Astro.site || siteConfig.url).toString() : `${siteConfig.url}/og-image.jpg`;
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <!-- 🔥 Naya Favicon aur Sitemap Link -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     
     <!-- Advanced SEO injected by astro-seo -->
     <SEO
       title={pageTitle}
       description={description || siteConfig.defaultDescription}
+      canonical={canonicalURL}
       openGraph={{
         basic: {
           title: pageTitle,
           type: "website",
-          image: `${siteConfig.url}/og-image.jpg`, // Apna Open Graph image URL daalein
+          image: ogImage,
         }
       }}
       extend={{
         meta: [{ name: "robots", content: "index, follow" }]
       }}
     />
+    <slot name="head" />
   </head>
-  <body style="margin: 0; background-color: #000000; color: #ffffff; padding-bottom: 90px;">
+  <body style="margin: 0; background-color: #050505; color: #ffffff; padding-bottom: 90px; box-sizing: border-box;">
     
-    <!-- Yahan humne Header component ko add kar diya hai -->
     <Header />
     
     <main>
-      <slot /> <!-- Ye "<slot />" vo jagah hai jahan alag-alag pages ka content load hoga -->
+      <slot /> 
     </main>
 
     <!-- Global Cart State Manager -->
@@ -55,23 +62,16 @@ const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
         const countBadge = document.getElementById('cart-count');
         if (countBadge) {
           countBadge.innerText = totalCount;
-          // Agar cart khali hai to badge hide kar do
           countBadge.style.display = totalCount > 0 ? 'flex' : 'none';
         }
       }
       
-      // Page load hote hi cart count update karo
       updateCartBadge();
-      
-      // Jab bhi koi naya item add ho, badge update karo
       window.addEventListener('cartUpdated', updateCartBadge);
     </script>
 
-    <!-- Hum yahan Footer.astro component baad mein daalenge -->
     <Footer />
-
     <WhatsAppLeadPopup />
-
     <MobileBottomNav />
 
   </body>

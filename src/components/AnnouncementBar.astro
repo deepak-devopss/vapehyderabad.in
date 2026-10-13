@@ -1,0 +1,143 @@
+---
+// src/components/AnnouncementBar.astro
+// Yahan aap wo link daal sakte hain jahan user ko redirect karna hai (jaise /shop ya /offers)
+const targetLink = "/shop"; 
+---
+
+<a href={targetLink} class="announcement-wrapper">
+  <div class="marquee-container">
+    <div class="marquee-track">
+      
+      <!-- Pehla Set -->
+      <div class="marquee-content">
+        <span class="highlight">🔥 FLASH SALE</span>
+        <span>GET 10% OFF ON ALL PREMIUM VAPES</span>
+        <span class="dot">✦</span>
+        <span>USE CODE: <strong class="promo-code">VAPEHYD10</strong></span>
+        <span class="dot">✦</span>
+        <span class="action-text">SHOP NOW <span class="arrow">→</span></span>
+        <span class="separator">|</span>
+      </div>
+
+      <!-- Dusra Set (Smooth infinite loop ke liye) -->
+      <div class="marquee-content" aria-hidden="true">
+        <span class="highlight">🔥 FLASH SALE</span>
+        <span>GET 10% OFF ON ALL PREMIUM VAPES</span>
+        <span class="dot">✦</span>
+        <span>USE CODE: <strong class="promo-code">VAPEHYD10</strong></span>
+        <span class="dot">✦</span>
+        <span class="action-text">SHOP NOW <span class="arrow">→</span></span>
+        <span class="separator">|</span>
+      </div>
+
+      <!-- Teesra Set -->
+      <div class="marquee-content" aria-hidden="true">
+        <span class="highlight">🔥 FLASH SALE</span>
+        <span>GET 10% OFF ON ALL PREMIUM VAPES</span>
+        <span class="dot">✦</span>
+        <span>USE CODE: <strong class="promo-code">VAPEHYD10</strong></span>
+        <span class="dot">✦</span>
+        <span class="action-text">SHOP NOW <span class="arrow">→</span></span>
+        <span class="separator">|</span>
+      </div>
+
+    </div>
+  </div>
+</a>
+
+<style>
+  /* Wrapper ko link banaya hai */
+  .announcement-wrapper {
+    display: block;
+    text-decoration: none;
+    width: 100%;
+    z-index: 100;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  /* Ultra-Premium Dark Background */
+  .marquee-container { 
+    background: #0a0a0a; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+    padding: 10px 0; 
+    overflow: hidden; 
+    position: relative; 
+    width: 100%; 
+    transition: background 0.3s ease;
+  }
+
+  /* Hover Effects: Background halka light hoga aur text ruk jayega */
+  .announcement-wrapper:hover .marquee-container {
+    background: #141414;
+  }
+  .announcement-wrapper:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  .announcement-wrapper:hover .arrow {
+    transform: translateX(4px);
+    color: #ff3e6c;
+  }
+
+  .marquee-track { 
+    display: flex; 
+    width: max-content; 
+    animation: scrollLeft 25s linear infinite; 
+  }
+
+  .marquee-content { 
+    display: flex; 
+    align-items: center; 
+    padding-right: 30px;
+  }
+
+  .marquee-content span { 
+    color: #b0b0b0; /* Sleek Silver Color */
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    letter-spacing: 1.5px; 
+    white-space: nowrap; 
+    margin-right: 15px;
+    text-transform: uppercase;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  /* Premium Highlights */
+  .highlight {
+    color: #ff3e6c !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 12px rgba(255, 62, 108, 0.4);
+  }
+
+  .promo-code {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    letter-spacing: 2px;
+  }
+
+  .action-text {
+    color: #fff !important;
+    font-weight: 700 !important;
+  }
+
+  .arrow {
+    display: inline-block;
+    transition: transform 0.3s ease, color 0.3s ease;
+    margin-left: 4px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .dot, .separator { 
+    color: rgba(255,255,255,0.15) !important; 
+    font-size: 0.9rem !important; 
+  }
+  
+  /* Smooth Scroll Animation */
+  @keyframes scrollLeft { 
+    0% { transform: translateX(0); } 
+    100% { transform: translateX(-33.33%); } /* 3 set hain isliye 33.33% */
+  }
+</style>

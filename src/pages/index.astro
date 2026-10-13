@@ -2,6 +2,7 @@
 // src/pages/index.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
 import HeroBanner from '../components/HeroBanner.astro';
 import CategorySlider from '../components/CategorySlider.astro';
 import ProductGrid from '../components/ProductGrid.astro';
@@ -11,6 +12,10 @@ import RichTextWithImage from '../components/RichTextWithImage.astro';
 import LocalAreas from '../components/LocalAreas.astro';
 import FAQ from '../components/FAQ.astro';
 
+
+// 🔥 APNA NAYA TITLE YAHAN DALIYE 🔥
+const pageTitle = "Vape Shop Hyderabad - 30 Min Express Vape Delivery in Hyderabad";
+const pageDescription = "Looking to buy premium disposable vapes, pods, and e-liquids in Hyderabad? VAPEHYD offers 100% authentic products with instant 30-minute delivery.";
 
 // JSON-LD Schema for Local Business (Aapki SEO rank boost karne ke liye)
 const localBusinessSchema = {
@@ -32,13 +37,17 @@ const localBusinessSchema = {
 };
 ---
 
-<BaseLayout title="Home" description="Premium Vapes Delivered Fast in Hyderabad. Buy top brands today!">
+<!-- 🔥 Galti yahan thi, ab ye sahi ho gaya hai 🔥 -->
+<BaseLayout title={pageTitle} description={pageDescription}>
   
   <!-- SEO Schema Injection -->
   <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
 
   <!-- Hero Section -->
+  
   <HeroBanner />
+
+  <AnnouncementBar />
 
   <CategorySlider />
 
@@ -59,5 +68,4 @@ const localBusinessSchema = {
 
   <FAQ />
   
-
 </BaseLayout>
